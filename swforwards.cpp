@@ -21,14 +21,23 @@
 
 SteamWorksForwards::SteamWorksForwards() :
 		m_CallbackGSClientApprove(this, &SteamWorksForwards::OnGSClientApprove),
-		m_CallbackValidateTicket(this, &SteamWorksForwards::OnValidateTicket)
+		m_CallbackValidateTicket(this, &SteamWorksForwards::OnValidateTicket),
+		m_CallbackSteamConnected(this, &SteamWorksForwards::OnSteamServersConnected),
+		m_CallbackSteamConnectFailure(this, &SteamWorksForwards::OnSteamServersConnectFailure),
+		m_CallbackSteamDisconnected(this, &SteamWorksForwards::OnSteamServersDisconnected)
 {
 	this->pFOVC = forwards->CreateForward("SW_OnValidateClient", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
+	this->pFOSSC = forwards->CreateForward("Steam_SteamServersConnected", ET_Ignore, 0, NULL);
+	this->pFOSSCF = forwards->CreateForward("Steam_SteamServersConnectFailure", ET_Ignore, 1, NULL, Param_Cell);
+	this->pFOSSD = forwards->CreateForward("Steam_SteamServersDisconnected", ET_Ignore, 1, NULL, Param_Cell);
 }
 
 SteamWorksForwards::~SteamWorksForwards()
 {
 	forwards->ReleaseForward(this->pFOVC);
+	forwards->ReleaseForward(this->pFOSSC);
+	forwards->ReleaseForward(this->pFOSSCF);
+	forwards->ReleaseForward(this->pFOSSD);
 }
 
 void SteamWorksForwards::NotifyPawnValidateClient(Account_t parent, Account_t child)
@@ -52,3 +61,36 @@ void SteamWorksForwards::OnValidateTicket(ValidateAuthTicketResponse_t *pTicket)
 {
 	this->NotifyPawnValidateClient(pTicket->m_OwnerSteamID.GetAccountID(), pTicket->m_SteamID.GetAccountID());
 }
+
+void SteamWorksForwards::OnSteamServersConnected(SteamServersConnected_t *pResponse)
+{
+	if (this->pFOSSC->GetFunctionCount() == 0)
+	{
+		return;
+	}
+	
+	this->pFOSSC->Execute(NULL);
+}
+
+void SteamWorksForwards::OnSteamServersConnectFailure(SteamServerConnectFailure_t *pResponse)
+{
+	if (this->pFOSSCF->GetFunctionCount() == 0)
+	{
+		return;
+	}
+	
+	this->pFOSSCF->PushCell(pResponse->m_eResult);
+	this->pFOSSCF->Execute(NULL);
+}
+
+void SteamWorksForwards::OnSteamServersDisconnected(SteamServersDisconnected_t *pResponse)
+{
+	if (this->pFOSSD->GetFunctionCount() == 0)
+	{
+		return;
+	}
+	
+	this->pFOSSD->PushCell(pResponse->m_eResult);
+	this->pFOSSD->Execute(NULL);
+}
+
