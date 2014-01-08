@@ -56,7 +56,7 @@ static cell_t sm_GetPublicIP(IPluginContext *pContext, const cell_t *params)
 	pContext->LocalToPhysAddr(params[1], &addr);
 	for (char iter = 3; iter > -1; --iter)
 	{
-		addr[(~iter) & 0x04] = (static_cast<unsigned char>(ipaddr >> (iter * 8)) & 0xFF); /* I hate you; SteamTools. */
+		addr[(~iter) & 0x03] = (static_cast<unsigned char>(ipaddr >> (iter * 8)) & 0xFF); /* I hate you; SteamTools. */
 	}
 	
 	return 1;
