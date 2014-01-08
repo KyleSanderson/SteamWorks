@@ -95,12 +95,71 @@ static cell_t sm_SetGameDescription(IPluginContext *pContext, const cell_t *para
 	return 1;
 }
 
+static cell_t sm_IsConnected(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamGameServer *pServer = GetGSPointer();
+
+	if (pServer == NULL)
+	{
+		return 0;
+	}
+
+	return pServer->BLoggedOn() ? 1 : 0;
+}
+
+static cell_t sm_SetRule(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamGameServer *pServer = GetGSPointer();
+
+	if (pServer == NULL)
+	{
+		return 0;
+	}
+
+	char *pKey, *pValue;
+	pContext->LocalToString(params[1], &pKey);
+	pContext->LocalToString(params[2], &pValue);
+
+	pServer->SetKeyValue(pKey, pValue);
+	return 1;
+}
+
+static cell_t sm_ClearRules(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamGameServer *pServer = GetGSPointer();
+
+	if (pServer == NULL)
+	{
+		return 0;
+	}
+
+	pServer->ClearAllKeyValues();
+	return 1;
+}
+
+static cell_t sm_ForceHeartbeat(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamGameServer *pServer = GetGSPointer();
+
+	if (pServer == NULL)
+	{
+		return 0;
+	}
+
+	pServer->ForceHeartbeat();
+	return 1;
+}
+
 static sp_nativeinfo_t gsnatives[] = {
 	{"Steam_IsVACEnabled",				sm_IsVACEnabled},
 	{"Steam_GetPublicIP",				sm_GetPublicIP},
 	{"Steam_GetPublicIPCell",				sm_GetPublicIPCell},
 	{"Steam_IsLoaded",				sm_IsLoaded},
 	{"Steam_SetGameDescription",	sm_SetGameDescription},
+	{"Steam_IsConnected",				sm_IsConnected},
+	{"Steam_SetRule",						sm_SetRule},
+	{"Steam_ClearRules",						sm_ClearRules},
+	{"Steam_ForceHeartbeat",				sm_ForceHeartbeat},
 	{NULL,											NULL}
 };
 
