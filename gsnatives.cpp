@@ -151,15 +151,15 @@ static cell_t sm_ForceHeartbeat(IPluginContext *pContext, const cell_t *params)
 }
 
 static sp_nativeinfo_t gsnatives[] = {
-	{"Steam_IsVACEnabled",				sm_IsVACEnabled},
-	{"Steam_GetPublicIP",				sm_GetPublicIP},
-	{"Steam_GetPublicIPCell",				sm_GetPublicIPCell},
-	{"Steam_IsLoaded",				sm_IsLoaded},
-	{"Steam_SetGameDescription",	sm_SetGameDescription},
-	{"Steam_IsConnected",				sm_IsConnected},
-	{"Steam_SetRule",						sm_SetRule},
-	{"Steam_ClearRules",						sm_ClearRules},
-	{"Steam_ForceHeartbeat",				sm_ForceHeartbeat},
+	{"SteamWorks_IsVACEnabled",				sm_IsVACEnabled},
+	{"SteamWorks_GetPublicIP",				sm_GetPublicIP},
+	{"SteamWorks_GetPublicIPCell",				sm_GetPublicIPCell},
+	{"SteamWorks_IsLoaded",				sm_IsLoaded},
+	{"SteamWorks_SetGameDescription",	sm_SetGameDescription},
+	{"SteamWorks_IsConnected",				sm_IsConnected},
+	{"SteamWorks_SetRule",						sm_SetRule},
+	{"SteamWorks_ClearRules",						sm_ClearRules},
+	{"SteamWorks_ForceHeartbeat",				sm_ForceHeartbeat},
 	{NULL,											NULL}
 };
 

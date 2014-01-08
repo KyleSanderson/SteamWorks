@@ -27,9 +27,9 @@ SteamWorksForwards::SteamWorksForwards() :
 		m_CallbackSteamDisconnected(this, &SteamWorksForwards::OnSteamServersDisconnected)
 {
 	this->pFOVC = forwards->CreateForward("SW_OnValidateClient", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
-	this->pFOSSC = forwards->CreateForward("Steam_SteamServersConnected", ET_Ignore, 0, NULL);
-	this->pFOSSCF = forwards->CreateForward("Steam_SteamServersConnectFailure", ET_Ignore, 1, NULL, Param_Cell);
-	this->pFOSSD = forwards->CreateForward("Steam_SteamServersDisconnected", ET_Ignore, 1, NULL, Param_Cell);
+	this->pFOSSC = forwards->CreateForward("SteamWorks_SteamServersConnected", ET_Ignore, 0, NULL);
+	this->pFOSSCF = forwards->CreateForward("SteamWorks_SteamServersConnectFailure", ET_Ignore, 1, NULL, Param_Cell);
+	this->pFOSSD = forwards->CreateForward("SteamWorks_SteamServersDisconnected", ET_Ignore, 1, NULL, Param_Cell);
 }
 
 SteamWorksForwards::~SteamWorksForwards()
