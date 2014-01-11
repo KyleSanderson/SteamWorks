@@ -46,6 +46,7 @@
 
 #include "swforwards.h"
 #include "gsnatives.h"
+#include "swgshooks.h"
 
 /**
  * @brief Sample implementation of the SDK Extension.
@@ -129,6 +130,7 @@ public:
 	SteamWorksGameData *pSWGameData;
 	SteamWorksGameServer *pSWGameServer;
 	SteamWorksGSNatives *pGSNatives;
+	SteamWorksGSHooks *pGSHooks;
 };
 
 extern SteamWorks g_SteamWorks;
