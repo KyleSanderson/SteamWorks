@@ -150,6 +150,27 @@ static cell_t sm_ForceHeartbeat(IPluginContext *pContext, const cell_t *params)
 	return 1;
 }
 
+static cell_t sm_UserHasLicenseForApp(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamGameServer *pServer = GetGSPointer();
+
+	if (pServer == NULL)
+	{
+		return k_EUserHasLicenseResultNoAuth;
+	}
+	
+	int client = gamehelpers->ReferenceToIndex(params[1]);
+	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client); /* Man, including GameHelpers and PlayerHelpers for this native :(. */
+	if (pPlayer == NULL || pPlayer->IsConnected() == false)
+	{
+		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	}
+	
+	CSteamID checkid(pPlayer->GetSteamAccountID(false), static_cast<EUniverse>(params[3]), static_cast<EAccountType>(params[4]));
+
+	return pServer->UserHasLicenseForApp(checkid, params[2]);
+}
+
 static sp_nativeinfo_t gsnatives[] = {
 	{"SteamWorks_IsVACEnabled",				sm_IsVACEnabled},
 	{"SteamWorks_GetPublicIP",				sm_GetPublicIP},
@@ -160,6 +181,7 @@ static sp_nativeinfo_t gsnatives[] = {
 	{"SteamWorks_SetRule",						sm_SetRule},
 	{"SteamWorks_ClearRules",						sm_ClearRules},
 	{"SteamWorks_ForceHeartbeat",				sm_ForceHeartbeat},
+	{"SteamWorks_HasLicenseForApp",			sm_UserHasLicenseForApp},
 	{NULL,											NULL}
 };
 
