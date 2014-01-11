@@ -26,7 +26,8 @@ SteamWorksForwards::SteamWorksForwards() :
 		m_CallbackSteamConnectFailure(this, &SteamWorksForwards::OnSteamServersConnectFailure),
 		m_CallbackSteamDisconnected(this, &SteamWorksForwards::OnSteamServersDisconnected)
 {
-	this->pFOVC = forwards->CreateForward("SW_OnValidateClient", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
+	this->pFOVC_Old = forwards->CreateForward("SW_OnValidateClient", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
+	this->pFOVC = forwards->CreateForward("SteamWorks_OnValidateClient", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
 	this->pFOSSC = forwards->CreateForward("SteamWorks_SteamServersConnected", ET_Ignore, 0, NULL);
 	this->pFOSSCF = forwards->CreateForward("SteamWorks_SteamServersConnectFailure", ET_Ignore, 1, NULL, Param_Cell);
 	this->pFOSSD = forwards->CreateForward("SteamWorks_SteamServersDisconnected", ET_Ignore, 1, NULL, Param_Cell);
@@ -34,6 +35,7 @@ SteamWorksForwards::SteamWorksForwards() :
 
 SteamWorksForwards::~SteamWorksForwards()
 {
+	forwards->ReleaseForward(this->pFOVC_Old);
 	forwards->ReleaseForward(this->pFOVC);
 	forwards->ReleaseForward(this->pFOSSC);
 	forwards->ReleaseForward(this->pFOSSCF);
@@ -42,14 +44,19 @@ SteamWorksForwards::~SteamWorksForwards()
 
 void SteamWorksForwards::NotifyPawnValidateClient(Account_t parent, Account_t child)
 {
-	if (this->pFOVC->GetFunctionCount() == 0)
+	if (this->pFOVC_Old->GetFunctionCount() != 0)
 	{
-		return;
+		this->pFOVC_Old->PushCell(parent);
+		this->pFOVC_Old->PushCell(child);
+		this->pFOVC_Old->Execute(NULL);
 	}
 
-	this->pFOVC->PushCell(parent);
-	this->pFOVC->PushCell(child);
-	this->pFOVC->Execute(NULL);
+	if (this->pFOVC->GetFunctionCount() != 0)
+	{
+		this->pFOVC->PushCell(parent);
+		this->pFOVC->PushCell(child);
+		this->pFOVC->Execute(NULL);
+	}
 }
 
 void SteamWorksForwards::OnGSClientApprove(GSClientApprove_t *pApprove)

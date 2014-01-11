@@ -42,6 +42,7 @@ class SteamWorksForwards
 	
 	private:
 		IForward *pFOVC;	/* Forward On Validate Client */
+		IForward *pFOVC_Old;	/* OLD Forward On Validate Client */
 		IForward *pFOSSC;	/* Forward On Steam Servers Connected */
 		IForward *pFOSSCF;	/* Forward On Steam Servers Connect Failure */
 		IForward *pFOSSD;	/* Forward On Steam Servers Disconnected */
