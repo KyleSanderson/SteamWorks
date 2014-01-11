@@ -24,6 +24,7 @@ PROJECT = SteamWorks
 
 #Uncomment for Metamod: Source enabled extension
 #USEMETA = true
+USESH = true
 
 OBJECTS = sdk/smsdk_ext.cpp extension.cpp swgameserver.cpp swgamedata.cpp swforwards.cpp gsnatives.cpp
 
@@ -125,6 +126,11 @@ ifeq "$(USEMETA)" "true"
 	CFLAGS += -DSE_EPISODEONE=1 -DSE_DARKMESSIAH=2 -DSE_ORANGEBOX=3 -DSE_BLOODYGOODTIME=4 -DSE_EYE=5 \
 		-DSE_CSS=6 -DSE_ORANGEBOXVALVE=7 -DSE_LEFT4DEAD=8 -DSE_LEFT4DEAD2=9 -DSE_ALIENSWARM=10 \
 		-DSE_PORTAL2=11 -DSE_CSGO=12
+endif
+
+ifeq "$(USESH)" "true"
+	INCLUDE += -I$(METAMOD) -I$(METAMOD)/sourcehook
+	CFLAGS += -DMETA_NO_HL2SDK
 endif
 
 LINK += -m32 -lm -ldl

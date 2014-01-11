@@ -56,7 +56,7 @@
  * @brief Sets whether or not this plugin required Metamod.
  * NOTE: Uncomment to enable, comment to disable.
  */
-//#define SMEXT_CONF_METAMOD		
+#define SMEXT_CONF_METAMOD		
 
 /** Enable interfaces you want to use here by uncommenting lines */
 #define SMEXT_ENABLE_FORWARDSYS
