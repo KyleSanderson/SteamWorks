@@ -21,6 +21,9 @@
 #include <sourcemod>
 #include <SteamWorks>
 
+new Handle:g_hSteamServersConnected = INVALID_HANDLE;
+new Handle:g_hSteamServersDisconnected = INVALID_HANDLE;
+
 public Plugin:myinfo = {
 	name = "SteamWorks Additive Glider", /* SWAG */
 	author = "Kyle Sanderson",
@@ -38,6 +41,9 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 	CreateNative("Steam_SetRule", native_SetRule);
 	CreateNative("Steam_ClearRules", native_ClearRules);
 	CreateNative("Steam_ForceHeartbeat", native_ForceHeartbeat);
+	
+	g_hSteamServersConnected = CreateGlobalForward("Steam_SteamServersConnected", ET_Ignore);
+	g_hSteamServersDisonnected = CreateGlobalForward("Steam_SteamServersDisconnected", ET_Ignore);
 	return APLRes_Success;
 }
 
@@ -64,4 +70,44 @@ public native_SetGameDescription(Handle:plugin, numParams)
 public native_IsConnected(Handle:plugin, numParams)
 {
 	return SteamWorks_IsConnected();
+}
+
+public native_SetRule(Handle:plugin, numParams)
+{
+	decl String:sKey[PLATFORM_MAX_PATH], String:sValue[PLATFORM_MAX_PATH];
+	GetNativeString(1, sKey, sizeof(sKey));
+	GetNativeString(2, sValue, sizeof(sValue));
+	return SteamWorks_SetRule(sKey, sValue);
+}
+
+public native_ClearRules(Handle:plugin, numParams)
+{
+	return SteamWorks_ClearRules();
+}
+
+public native_ForceHeartbeat(Handle:plugin, numParams)
+{
+	return SteamWorks_ForceHeartbeat();
+}
+
+public SteamWorks_SteamServersConnected()
+{
+	if (GetForwardFunctionCount(g_hSteamServersConnected) == 0)
+	{
+		return;
+	}
+	
+	Call_StartForward(g_hSteamServersConnected);
+	Call_Finish();
+}
+
+public SteamWorks_SteamServersDisconnected()
+{
+	if (GetForwardFunctionCount(g_hSteamServersDisconnected) == 0)
+	{
+		return;
+	}
+	
+	Call_StartForward(g_hSteamServersDisconnected);
+	Call_Finish();
 }
