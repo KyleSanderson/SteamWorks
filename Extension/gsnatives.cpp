@@ -166,7 +166,19 @@ static cell_t sm_UserHasLicenseForApp(IPluginContext *pContext, const cell_t *pa
 		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
 	}
 	
-	CSteamID checkid(pPlayer->GetSteamAccountID(false), static_cast<EUniverse>(params[3]), static_cast<EAccountType>(params[4]));
+	EUniverse universe = k_EUniversePublic;
+	EAccountType type = k_EAccountTypeIndividual;
+	
+	if (params[0] > 2)
+	{
+		universe = static_cast<EUniverse>(params[3]);
+		if (params[0] > 3)
+		{
+			type = static_cast<EAccountType>(params[4]);
+		}
+	}
+
+	CSteamID checkid(pPlayer->GetSteamAccountID(false), universe, type);
 
 	return pServer->UserHasLicenseForApp(checkid, params[2]);
 }
