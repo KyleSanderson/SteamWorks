@@ -60,3 +60,21 @@ void SteamWorks::SDK_OnUnload()
 	delete this->pSWGameServer;
 	delete this->pSWGameData;
 }
+
+CSteamID SteamWorks::CreateCommonCSteamID(uint32_t authid, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
+{
+	EUniverse universe = k_EUniversePublic;
+	EAccountType type = k_EAccountTypeIndividual;
+
+	if (params[0] >= universeplace)
+	{
+		universe = static_cast<EUniverse>(params[universeplace]);
+	}
+
+	if (params[0] >= typeplace)
+	{
+		type = static_cast<EAccountType>(params[typeplace]);
+	}
+
+	return CSteamID(authid, universe, type);
+}
