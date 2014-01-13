@@ -26,7 +26,7 @@ PROJECT = SteamWorks
 #USEMETA = true
 USESH = true
 
-OBJECTS = sdk/smsdk_ext.cpp extension.cpp swgameserver.cpp swgamedata.cpp swforwards.cpp gsnatives.cpp swgshooks.cpp
+OBJECTS = sdk/smsdk_ext.cpp extension.cpp swgameserver.cpp swgamedata.cpp swforwards.cpp gsnatives.cpp swgshooks.cpp ssnatives.cpp
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###
