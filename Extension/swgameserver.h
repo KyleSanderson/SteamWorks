@@ -34,6 +34,8 @@ class SteamWorksGameServer
 		ISteamNetworking *GetNetworking(void);
 		ISteamGameServerStats *GetServerStats(void);
 		ISteamHTTP *GetHTTP(void);
+	public:
+		void Reset(void);
 	private:
 		void GetUserAndPipe(HSteamUser &hSteamUser, HSteamPipe &hSteamPipe);
 	private:

@@ -21,15 +21,20 @@
 
 SteamWorksGameServer::SteamWorksGameServer()
 {
+	this->Reset();
+}
+
+SteamWorksGameServer::~SteamWorksGameServer()
+{
+}
+
+void SteamWorksGameServer::Reset(void)
+{
 	this->m_pGameServer = NULL;
 	this->m_pUtils = NULL;
 	this->m_pNetworking = NULL;
 	this->m_pStats = NULL;
 	this->m_pHTTP = NULL;
-}
-
-SteamWorksGameServer::~SteamWorksGameServer()
-{
 }
 
 ISteamClient *SteamWorksGameServer::GetSteamClient(void)
