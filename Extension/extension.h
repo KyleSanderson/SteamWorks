@@ -48,6 +48,7 @@
 #include "gsnatives.h"
 #include "swgshooks.h"
 #include "ssnatives.h"
+#include "swgsdetours.h"
 
 /**
  * @brief Sample implementation of the SDK Extension.
@@ -136,6 +137,7 @@ public:
 	SteamWorksGSNatives *pGSNatives;
 	SteamWorksGSHooks *pGSHooks;
 	SteamWorksSSNatives *pSSNatives;
+	SteamWorksGSDetours *pGSDetours;
 };
 
 extern SteamWorks g_SteamWorks;
