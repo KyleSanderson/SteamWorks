@@ -32,7 +32,7 @@
 #ifndef _INCLUDE_SOURCEMOD_DETOURS_H_
 #define _INCLUDE_SOURCEMOD_DETOURS_H_
 
-#include "extension.h"
+#include "smsdk_ext.h"
 #include <jit/jit_helpers.h>
 #include <jit/x86/x86_macros.h>
 #include "detourhelpers.h"
@@ -119,6 +119,7 @@ ret name##Class::name(p1type p1name, p2type p2name, p3type p3name, p4type p4name
 
 #define DETOUR_CREATE_MEMBER(name, gamedata) CDetourManager::CreateDetour(GET_MEMBER_CALLBACK(name), GET_MEMBER_TRAMPOLINE(name), gamedata);
 #define DETOUR_CREATE_STATIC(name, gamedata) CDetourManager::CreateDetour(GET_STATIC_CALLBACK(name), GET_STATIC_TRAMPOLINE(name), gamedata);
+#define DETOUR_CREATE_STATIC_FIXED(name, address) CDetourManager::CreateDetour(GET_STATIC_CALLBACK(name), GET_STATIC_TRAMPOLINE(name), address);
 
 
 class GenericClass {};
@@ -157,6 +158,7 @@ public:
 
 protected:
 	CDetour(void *callbackfunction, void **trampoline, const char *signame);
+	CDetour(void *callbackfunction, void **trampoline, void *address);
 
 	bool Init(ISourcePawnEngine *spengine, IGameConfig *gameconf);
 private:
@@ -179,6 +181,7 @@ private:
 	void **trampoline;
 	
 	const char *signame;
+	void *address;
 	ISourcePawnEngine *spengine;
 	IGameConfig *gameconf;
 };
@@ -229,6 +232,7 @@ public:
 	 * Note we changed the netadr_s reference into a void* to avoid needing to define the type
 	 */
 	static CDetour *CreateDetour(void *callbackfunction, void **trampoline, const char *signame);
+	static CDetour *CreateDetour(void *callbackfunction, void **trampoline, void *address);
 
 	friend class CBlocker;
 	friend class CDetour;
