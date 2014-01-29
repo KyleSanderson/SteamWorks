@@ -30,6 +30,7 @@
  */
 
 #include "extension.h"
+#include <stdlib.h>
 
 /**
  * @file extension.cpp
@@ -65,11 +66,30 @@ void SteamWorks::SDK_OnUnload()
 	delete this->pSWGameData;
 }
 
+CSteamID SteamWorks::CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
+{
+	EUniverse universe = k_EUniversePublic;
+	EAccountType type = k_EAccountTypeIndividual;
+	
+	const char *pAuth = pPlayer->GetAuthString(false); /* We're not using this for Auth. */
+	if (pAuth == NULL || pAuth[0] == '\0' || strlen(pAuth) < 11 || pAuth[6] == 'I')
+	{
+		return this->CreateCommonCSteamID(pPlayer->GetSteamAccountID(false), params, universeplace, typeplace);
+	}
+
+	universe = static_cast<EUniverse>(atoi(&pAuth[6]));
+	if (universe == k_EUniverseInvalid)
+	{
+		universe = k_EUniversePublic; /* Legacy Engine shim. */
+	}
+
+	return CSteamID(pPlayer->GetSteamAccountID(false), universe, type);
+}
+
 CSteamID SteamWorks::CreateCommonCSteamID(uint32_t authid, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
 {
 	EUniverse universe = k_EUniversePublic;
 	EAccountType type = k_EAccountTypeIndividual;
-
 	if (params[0] >= universeplace)
 	{
 		universe = static_cast<EUniverse>(params[universeplace]);

@@ -128,6 +128,7 @@ public:
 	//public: /* IClientListener */
 	//virtual void OnClientDisconnecting(int client);
 public:
+	CSteamID CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *params, unsigned char universeplace, unsigned char typeplace);
 	CSteamID CreateCommonCSteamID(uint32_t authid, const cell_t *params, unsigned char universeplace, unsigned char typeplace);
 
 public:

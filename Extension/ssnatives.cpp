@@ -29,6 +29,11 @@ static ISteamGameServerStats *GetServerStatsPointer(void)
 	return g_SteamWorks.pSWGameServer->GetServerStats();
 }
 
+static CSteamID CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
+{
+	return g_SteamWorks.CreateCommonCSteamID(pPlayer, params, universeplace, typeplace);
+}
+
 static CSteamID CreateCommonCSteamID(uint32_t authid, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
 {
 	return g_SteamWorks.CreateCommonCSteamID(authid, params, universeplace, typeplace);
@@ -63,7 +68,7 @@ static cell_t sm_RequestUserStats(IPluginContext *pContext, const cell_t *params
 		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
 	}
 
-	CSteamID checkid = CreateCommonCSteamID(pPlayer->GetSteamAccountID(false), params);
+	CSteamID checkid = CreateCommonCSteamID(pPlayer, params);
 	return pStats->RequestUserStats(checkid) != k_uAPICallInvalid ? 1 : 0;
 }
 
@@ -88,7 +93,7 @@ static cell_t sm_GetStatCell(IPluginContext *pContext, const cell_t *params)
 
 	cell_t *pValue;
 	pContext->LocalToPhysAddr(params[3], &pValue);
-	CSteamID checkid = CreateCommonCSteamID(pPlayer->GetSteamAccountID(false), params, 4, 5);
+	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 4, 5);
 	return pStats->GetUserStat(checkid, pName, pValue) ? 1 : 0;
 }
 
@@ -131,7 +136,7 @@ static cell_t sm_GetStatFloat(IPluginContext *pContext, const cell_t *params)
 
 	cell_t *pValue;
 	pContext->LocalToPhysAddr(params[3], &pValue);
-	CSteamID checkid = CreateCommonCSteamID(pPlayer->GetSteamAccountID(false), params, 4, 5);
+	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 4, 5);
 	
 	float fValue;
 	bool bResult = pStats->GetUserStat(checkid, pName, &fValue);

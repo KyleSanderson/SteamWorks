@@ -29,6 +29,11 @@ static ISteamGameServer *GetGSPointer(void)
 	return g_SteamWorks.pSWGameServer->GetGameServer();
 }
 
+static CSteamID CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
+{
+	return g_SteamWorks.CreateCommonCSteamID(pPlayer, params, universeplace, typeplace);
+}
+
 static CSteamID CreateCommonCSteamID(uint32_t authid, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
 {
 	return g_SteamWorks.CreateCommonCSteamID(authid, params, universeplace, typeplace);
@@ -171,7 +176,7 @@ static cell_t sm_UserHasLicenseForApp(IPluginContext *pContext, const cell_t *pa
 		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
 	}
 	
-	CSteamID checkid = CreateCommonCSteamID(pPlayer->GetSteamAccountID(false), params);
+	CSteamID checkid = CreateCommonCSteamID(pPlayer, params);
 	return pServer->UserHasLicenseForApp(checkid, params[2]);
 }
 
