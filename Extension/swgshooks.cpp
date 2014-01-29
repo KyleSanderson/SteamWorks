@@ -19,6 +19,13 @@
 
 #include "swgshooks.h"
 
+enum
+{
+	eUnhooked = 0,
+	eHooking,
+	eHooked
+};
+
 SH_DECL_HOOK0(ISteamGameServer, WasRestartRequested, SH_NOATTRIB, 0, bool); /* From SteamTools. */
 
 static ISteamGameServer *GetGameServerPointer()
@@ -28,7 +35,7 @@ static ISteamGameServer *GetGameServerPointer()
 
 SteamWorksGSHooks::SteamWorksGSHooks()
 {
-	this->bHooked = false;
+	this->uHooked = eHooking;
 	this->pFORR = forwards->CreateForward("SteamWorks_RestartRequested", ET_Hook, 0, NULL);
 	
 	smutils->AddGameFrameHook(OurGameFrameHook);
@@ -36,9 +43,8 @@ SteamWorksGSHooks::SteamWorksGSHooks()
 
 SteamWorksGSHooks::~SteamWorksGSHooks()
 {
+	this->RemoveHooks(GetGameServerPointer(), true);
 	smutils->RemoveGameFrameHook(OurGameFrameHook);
-
-	this->RemoveHooks(GetGameServerPointer());
 	forwards->ReleaseForward(this->pFORR);
 }
 
@@ -58,24 +64,31 @@ bool SteamWorksGSHooks::WasRestartRequested(void) /* Mimic SteamTools. */
 
 void SteamWorksGSHooks::AddHooks(ISteamGameServer *pGameServer)
 {
-	if (this->bHooked == true || pGameServer == NULL)
+	if (this->uHooked == eHooked || pGameServer == NULL)
 	{
 		return;
 	}
 
-	this->bHooked = true;
+	this->uHooked = eHooked;
 	SH_ADD_HOOK(ISteamGameServer, WasRestartRequested, pGameServer, SH_MEMBER(this, &SteamWorksGSHooks::WasRestartRequested), false);
 }
 
-void SteamWorksGSHooks::RemoveHooks(ISteamGameServer *pGameServer)
+void SteamWorksGSHooks::RemoveHooks(ISteamGameServer *pGameServer, bool destroyed)
 {
-	if (this->bHooked == false || pGameServer == NULL)
+	if (this->uHooked != eHooked || pGameServer == NULL)
 	{
 		return;
 	}
 
-	this->bHooked = false;
 	SH_REMOVE_HOOK(ISteamGameServer, WasRestartRequested, pGameServer, SH_MEMBER(this, &SteamWorksGSHooks::WasRestartRequested), false);
+	if (destroyed)
+	{
+		this->uHooked = eUnhooked;
+		return;
+	}
+
+	this->uHooked = eHooking;
+	smutils->AddGameFrameHook(OurGameFrameHook);
 }
 
 void OurGameFrameHook(bool simulating) /* What we do for SDK independence. */

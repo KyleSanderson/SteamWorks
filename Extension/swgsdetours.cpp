@@ -21,13 +21,17 @@
 
 DETOUR_DECL_STATIC0(SteamAPIShutdown, void)
 {
-	DETOUR_STATIC_CALL(SteamAPIShutdown)(); /* We're not a monster. */
-	if (g_SteamWorks.pSWGameServer == NULL)
+	if (g_SteamWorks.pSWGameServer != NULL)
 	{
-		return;
+		if (g_SteamWorks.pGSHooks != NULL)
+		{
+			g_SteamWorks.pGSHooks->RemoveHooks(g_SteamWorks.pSWGameServer->GetGameServer(), false);
+		}
+		
+		g_SteamWorks.pSWGameServer->Reset();
 	}
-	
-	g_SteamWorks.pSWGameServer->Reset();
+
+	DETOUR_STATIC_CALL(SteamAPIShutdown)(); /* We're not a monster. */
 }
 
 SteamWorksGSDetours::SteamWorksGSDetours()

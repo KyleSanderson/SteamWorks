@@ -31,14 +31,14 @@ class SteamWorksGSHooks
 	
 	public:
 		void AddHooks(ISteamGameServer *pGameServer);
-		void RemoveHooks(ISteamGameServer *pGameServer);
+		void RemoveHooks(ISteamGameServer *pGameServer, bool destroyed = false);
 	
 	public:
 		bool WasRestartRequested(void);
 		
 	private:
 		IForward *pFORR; /* On Restart Requested. */
-		bool bHooked;
+		unsigned char uHooked;
 };
 
 void OurGameFrameHook(bool simulating);
