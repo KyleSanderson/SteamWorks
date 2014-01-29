@@ -53,7 +53,11 @@ SteamWorksGSDetours::SteamWorksGSDetours()
 	if (pLibrary != NULL)
 	{
 		const char *pFunctionName = "SteamGameServer_Shutdown";
-		pAddress = pLibrary->GetSymbolAddress(pFunctionName);
+		if (pConfig == NULL || pConfig->GetMemSig(pFunctionName, &pAddress) == false)
+		{
+			pAddress = pLibrary->GetSymbolAddress(pFunctionName);
+		}
+		
 		pLibrary->CloseLibrary();
 	}
 
