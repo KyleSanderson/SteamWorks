@@ -19,6 +19,26 @@
 
 #include "swgameserver.h"
 
+static void GetGameSpecificConfigInterface(const char *pName, const char *&pVersion)
+{
+	if (g_SteamWorks.pSWGameData == NULL)
+	{
+		return;
+	}
+
+	IGameConfig *pConfig = g_SteamWorks.pSWGameData->GetGameData();
+	if (pConfig == NULL)
+	{
+		return;
+	}
+	
+	const char *pNewVersion = pConfig->GetKeyValue(pName);
+	if (pNewVersion != NULL)
+	{
+		pVersion = pNewVersion;
+	}
+}
+
 SteamWorksGameServer::SteamWorksGameServer()
 {
 	this->Reset();
@@ -50,7 +70,9 @@ ISteamGameServer *SteamWorksGameServer::GetGameServer(void)
 		HSteamPipe hSteamPipe;
 		GetUserAndPipe(hSteamUser, hSteamPipe);
 		
-		this->m_pGameServer = this->GetSteamClient()->GetISteamGameServer(hSteamUser, hSteamPipe, STEAMGAMESERVER_INTERFACE_VERSION);
+		const char *pVersion = STEAMGAMESERVER_INTERFACE_VERSION;
+		GetGameSpecificConfigInterface("SteamGameServerInterfaceVersion", pVersion);
+		this->m_pGameServer = this->GetSteamClient()->GetISteamGameServer(hSteamUser, hSteamPipe, pVersion);
 	}
 	
 	return this->m_pGameServer;
@@ -62,7 +84,9 @@ ISteamUtils *SteamWorksGameServer::GetUtils(void)
 	{
 		HSteamPipe hSteamPipe = SteamGameServer_GetHSteamPipe();
 		
-		this->m_pUtils = this->GetSteamClient()->GetISteamUtils(hSteamPipe, STEAMUTILS_INTERFACE_VERSION);
+		const char *pVersion = STEAMUTILS_INTERFACE_VERSION;
+		GetGameSpecificConfigInterface("SteamUtilsInterfaceVersion", pVersion);
+		this->m_pUtils = this->GetSteamClient()->GetISteamUtils(hSteamPipe, pVersion);
 	}
 	
 	return this->m_pUtils;
@@ -76,7 +100,9 @@ ISteamNetworking *SteamWorksGameServer::GetNetworking(void)
 		HSteamPipe hSteamPipe;
 		GetUserAndPipe(hSteamUser, hSteamPipe);
 		
-		this->m_pNetworking = this->GetSteamClient()->GetISteamNetworking(hSteamUser, hSteamPipe, STEAMNETWORKING_INTERFACE_VERSION);
+		const char *pVersion = STEAMNETWORKING_INTERFACE_VERSION;
+		GetGameSpecificConfigInterface("SteamNetworkingInterfaceVersion", pVersion);
+		this->m_pNetworking = this->GetSteamClient()->GetISteamNetworking(hSteamUser, hSteamPipe, pVersion);
 	}
 	
 	return this->m_pNetworking;
@@ -90,7 +116,9 @@ ISteamGameServerStats *SteamWorksGameServer::GetServerStats(void)
 		HSteamPipe hSteamPipe;
 		GetUserAndPipe(hSteamUser, hSteamPipe);
 		
-		this->m_pStats = this->GetSteamClient()->GetISteamGameServerStats(hSteamUser, hSteamPipe, STEAMGAMESERVERSTATS_INTERFACE_VERSION);
+		const char *pVersion = STEAMGAMESERVERSTATS_INTERFACE_VERSION;
+		GetGameSpecificConfigInterface("SteamGameServerStatsInterfaceVersion", pVersion);
+		this->m_pStats = this->GetSteamClient()->GetISteamGameServerStats(hSteamUser, hSteamPipe, pVersion);
 	}
 	
 	return this->m_pStats;
@@ -104,7 +132,9 @@ ISteamHTTP *SteamWorksGameServer::GetHTTP(void)
 		HSteamPipe hSteamPipe;
 		GetUserAndPipe(hSteamUser, hSteamPipe);
 		
-		this->m_pHTTP = this->GetSteamClient()->GetISteamHTTP(hSteamUser, hSteamPipe, STEAMHTTP_INTERFACE_VERSION);
+		const char *pVersion = STEAMHTTP_INTERFACE_VERSION;
+		GetGameSpecificConfigInterface("SteamHTTPInterfaceVersion", pVersion);
+		this->m_pHTTP = this->GetSteamClient()->GetISteamHTTP(hSteamUser, hSteamPipe, pVersion);
 	}
 	
 	return this->m_pHTTP;
