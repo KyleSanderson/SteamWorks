@@ -27,6 +27,7 @@ enum
 };
 
 SH_DECL_HOOK0(ISteamGameServer, WasRestartRequested, SH_NOATTRIB, 0, bool); /* From SteamTools. */
+SH_DECL_HOOK0_void(ISteamGameServer, LogOnAnonymous, SH_NOATTRIB, 0); /* From VoiDeD's MM:S plugin. */
 
 static ISteamGameServer *GetGameServerPointer()
 {
@@ -37,6 +38,7 @@ SteamWorksGSHooks::SteamWorksGSHooks()
 {
 	this->uHooked = eHooking;
 	this->pFORR = forwards->CreateForward("SteamWorks_RestartRequested", ET_Hook, 0, NULL);
+	this->pFOTR = forwards->CreateForward("SteamWorks_TokenRequested", ET_Ignore, 2, NULL, Param_String, Param_Cell);
 	
 	smutils->AddGameFrameHook(OurGameFrameHook);
 }
@@ -46,6 +48,31 @@ SteamWorksGSHooks::~SteamWorksGSHooks()
 	this->RemoveHooks(GetGameServerPointer(), true);
 	smutils->RemoveGameFrameHook(OurGameFrameHook);
 	forwards->ReleaseForward(this->pFORR);
+	forwards->ReleaseForward(this->pFOTR);
+}
+
+void SteamWorksGSHooks::LogOnAnonymous(void)
+{
+	ISteamGameServer *pGameServer = GetGameServerPointer();
+	if (pGameServer == NULL)
+	{
+		/* Go away, this wrecks us if we want to use it later. Also; impossible. */
+		RETURN_META(MRES_SUPERCEDE);
+	}
+
+	char pToken[256];
+	pToken[0] = '\0';
+
+	if (this->pFOTR->GetFunctionCount() != 0)
+	{
+		cell_t result = Pl_Continue;
+		this->pFOTR->PushStringEx(pToken, sizeof(pToken), SM_PARAM_STRING_UTF8 | SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
+		this->pFOTR->PushCell(sizeof(pToken));
+		this->pFOTR->Execute(&result);
+	}
+
+	pGameServer->LogOn("", pToken);
+	RETURN_META(MRES_SUPERCEDE);
 }
 
 bool SteamWorksGSHooks::WasRestartRequested(void) /* Mimic SteamTools. */
@@ -71,6 +98,7 @@ void SteamWorksGSHooks::AddHooks(ISteamGameServer *pGameServer)
 
 	this->uHooked = eHooked;
 	SH_ADD_HOOK(ISteamGameServer, WasRestartRequested, pGameServer, SH_MEMBER(this, &SteamWorksGSHooks::WasRestartRequested), false);
+	SH_ADD_HOOK(ISteamGameServer, LogOnAnonymous, pGameServer, SH_MEMBER(this, &SteamWorksGSHooks::LogOnAnonymous), false);
 }
 
 void SteamWorksGSHooks::RemoveHooks(ISteamGameServer *pGameServer, bool destroyed)
@@ -81,6 +109,7 @@ void SteamWorksGSHooks::RemoveHooks(ISteamGameServer *pGameServer, bool destroye
 	}
 
 	SH_REMOVE_HOOK(ISteamGameServer, WasRestartRequested, pGameServer, SH_MEMBER(this, &SteamWorksGSHooks::WasRestartRequested), false);
+	SH_REMOVE_HOOK(ISteamGameServer, LogOnAnonymous, pGameServer, SH_MEMBER(this, &SteamWorksGSHooks::LogOnAnonymous), false);
 	if (destroyed)
 	{
 		this->uHooked = eUnhooked;

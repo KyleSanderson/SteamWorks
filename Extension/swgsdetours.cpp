@@ -38,6 +38,11 @@ DETOUR_DECL_STATIC6(SteamGameServer_InitSafe, bool, uint32, unIP, uint16, usStea
 {
 	bool bRet = DETOUR_STATIC_CALL(SteamGameServer_InitSafe)(unIP, usSteamPort, usGamePort, usQueryPort, eServerMode, pchVersionString); /* Call to init game interfaces. */
 	
+	if (g_SteamWorks.pSWGameServer != NULL && g_SteamWorks.pGSHooks != NULL)
+	{
+		g_SteamWorks.pGSHooks->AddHooks(g_SteamWorks.pSWGameServer->GetGameServer());
+	}
+	
 	return bRet;
 }
 

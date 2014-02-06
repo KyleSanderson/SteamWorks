@@ -35,9 +35,11 @@ class SteamWorksGSHooks
 	
 	public:
 		bool WasRestartRequested(void);
+		void LogOnAnonymous(void);
 		
 	private:
 		IForward *pFORR; /* On Restart Requested. */
+		IForward *pFOTR; /* On Token Requested. */
 		unsigned char uHooked;
 };
 
