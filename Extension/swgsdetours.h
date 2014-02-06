@@ -29,6 +29,7 @@ class SteamWorksGSDetours
 		~SteamWorksGSDetours();
 		
 	private:
+		CDetour *m_pSafeInitDetour;
 		CDetour *m_pShutdownDetour;
 };
 
