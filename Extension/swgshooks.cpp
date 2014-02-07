@@ -60,16 +60,17 @@ void SteamWorksGSHooks::LogOnAnonymous(void)
 		RETURN_META(MRES_SUPERCEDE);
 	}
 
+	if (this->pFOTR->GetFunctionCount() == 0)
+	{
+		/* No plugin was loaded to handle this. Anon away; we can't break them. */
+		RETURN_META(MRES_IGNORED);
+	}
+
 	char pToken[256];
 	pToken[0] = '\0';
-
-	if (this->pFOTR->GetFunctionCount() != 0)
-	{
-		cell_t result = Pl_Continue;
-		this->pFOTR->PushStringEx(pToken, sizeof(pToken), SM_PARAM_STRING_UTF8 | SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
-		this->pFOTR->PushCell(sizeof(pToken));
-		this->pFOTR->Execute(&result);
-	}
+	this->pFOTR->PushStringEx(pToken, sizeof(pToken), SM_PARAM_STRING_UTF8 | SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
+	this->pFOTR->PushCell(sizeof(pToken));
+	this->pFOTR->Execute(NULL);
 
 	pGameServer->LogOn(pToken, pToken);
 	RETURN_META(MRES_SUPERCEDE);
