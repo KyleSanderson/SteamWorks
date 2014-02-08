@@ -600,6 +600,8 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 	pFunction->PushArray(pBuffer, celllen); /* Strings do a copy... it's really bad :( */
 	pFunction->PushCell(params[3]);
 	pFunction->Execute(NULL);
+
+	delete pBuffer;
 	return 1;
 }
 
