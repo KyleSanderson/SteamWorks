@@ -94,6 +94,84 @@ enum EResult
 	k_EResultValueOutOfRange = 78				// the value entered is outside the acceptable range
 };
 
+/* This enum is used in client API methods, do not re-number existing values. */
+enum EHTTPMethod
+{
+	k_EHTTPMethodInvalid = 0,
+	k_EHTTPMethodGET,
+	k_EHTTPMethodHEAD,
+	k_EHTTPMethodPOST,
+
+	// The remaining HTTP methods are not yet supported, per rfc2616 section 5.1.1 only GET and HEAD are required for 
+	// a compliant general purpose server.  We'll likely add more as we find uses for them.
+
+	// k_EHTTPMethodOPTIONS,
+	k_EHTTPMethodPUT,
+	k_EHTTPMethodDELETE,
+	// k_EHTTPMethodTRACE,
+	// k_EHTTPMethodCONNECT
+};
+
+
+/* HTTP Status codes that the server can send in response to a request, see rfc2616 section 10.3 for descriptions
+ of each of these. */
+enum EHTTPStatusCode
+{
+	// Invalid status code (this isn't defined in HTTP, used to indicate unset in our code)
+	k_EHTTPStatusCodeInvalid =					0,
+
+	// Informational codes
+	k_EHTTPStatusCode100Continue =				100,
+	k_EHTTPStatusCode101SwitchingProtocols =	101,
+
+	// Success codes
+	k_EHTTPStatusCode200OK =					200,
+	k_EHTTPStatusCode201Created =				201,
+	k_EHTTPStatusCode202Accepted =				202,
+	k_EHTTPStatusCode203NonAuthoritative =		203,
+	k_EHTTPStatusCode204NoContent =				204,
+	k_EHTTPStatusCode205ResetContent =			205,
+	k_EHTTPStatusCode206PartialContent =		206,
+
+	// Redirection codes
+	k_EHTTPStatusCode300MultipleChoices =		300,
+	k_EHTTPStatusCode301MovedPermanently =		301,
+	k_EHTTPStatusCode302Found =					302,
+	k_EHTTPStatusCode303SeeOther =				303,
+	k_EHTTPStatusCode304NotModified =			304,
+	k_EHTTPStatusCode305UseProxy =				305,
+	//k_EHTTPStatusCode306Unused =				306, (used in old HTTP spec, now unused in 1.1)
+	k_EHTTPStatusCode307TemporaryRedirect =		307,
+
+	// Error codes
+	k_EHTTPStatusCode400BadRequest =			400,
+	k_EHTTPStatusCode401Unauthorized =			401,
+	k_EHTTPStatusCode402PaymentRequired =		402, // This is reserved for future HTTP specs, not really supported by clients
+	k_EHTTPStatusCode403Forbidden =				403,
+	k_EHTTPStatusCode404NotFound =				404,
+	k_EHTTPStatusCode405MethodNotAllowed =		405,
+	k_EHTTPStatusCode406NotAcceptable =			406,
+	k_EHTTPStatusCode407ProxyAuthRequired =		407,
+	k_EHTTPStatusCode408RequestTimeout =		408,
+	k_EHTTPStatusCode409Conflict =				409,
+	k_EHTTPStatusCode410Gone =					410,
+	k_EHTTPStatusCode411LengthRequired =		411,
+	k_EHTTPStatusCode412PreconditionFailed =	412,
+	k_EHTTPStatusCode413RequestEntityTooLarge =	413,
+	k_EHTTPStatusCode414RequestURITooLong =		414,
+	k_EHTTPStatusCode415UnsupportedMediaType =	415,
+	k_EHTTPStatusCode416RequestedRangeNotSatisfiable = 416,
+	k_EHTTPStatusCode417ExpectationFailed =		417,
+
+	// Server error codes
+	k_EHTTPStatusCode500InternalServerError =	500,
+	k_EHTTPStatusCode501NotImplemented =		501,
+	k_EHTTPStatusCode502BadGateway =			502,
+	k_EHTTPStatusCode503ServiceUnavailable =	503,
+	k_EHTTPStatusCode504GatewayTimeout =		504,
+	k_EHTTPStatusCode505HTTPVersionNotSupported = 505,
+};
+
 native bool:SteamWorks_IsVACEnabled();
 native bool:SteamWorks_GetPublicIP(ipaddr[4]);
 native SteamWorks_GetPublicIPCell();
@@ -113,6 +191,52 @@ native bool:SteamWorks_GetStatAuthIDCell(authid, const String:sKey[], &value);
 native bool:SteamWorks_GetStatFloat(client, const String:sKey[], &Float:value);
 native bool:SteamWorks_GetStatAuthIDFloat(authid, const String:sKey[], &Float:value);
 
+native Handle:SteamWorks_CreateHTTPRequest(EHTTPMethod:method, const String:sURL[]);
+native bool:SteamWorks_SetHTTPRequestContextValue(Handle:hHandle, any:data1, any:data2=0);
+native bool:SteamWorks_SetHTTPRequestNetworkActivityTimeout(Handle:hHandle, timeout);
+native bool:SteamWorks_SetHTTPRequestHeaderValue(Handle:hHandle, const String:sName[], const Strnig:sValue[]);
+native bool:SteamWorks_SetHTTPRequestGetOrPostParameter(Handle:hHandle, const String:sName[], const Strnig:sValue[]);
+
+funcenum SteamWorksHTTPRequestCompleted
+{
+	public(Handle:hRequest, bool:bFailure, bool:bRequestSuccessful, EHTTPStatusCode:eStatusCode),
+	public(Handle:hRequest, bool:bFailure, bool:bRequestSuccessful, EHTTPStatusCode:eStatusCode, any:data1),
+	public(Handle:hRequest, bool:bFailure, bool:bRequestSuccessful, EHTTPStatusCode:eStatusCode, any:data1, any:data2)
+};
+
+funcenum SteamWorksHTTPHeadersReceived
+{
+	public(Handle:hRequest, bool:bFailure),
+	public(Handle:hRequest, bool:bFailure, any:data1),
+	public(Handle:hRequest, bool:bFailure, any:data1, any:data2)
+};
+
+funcenum SteamWorksHTTPDataReceived
+{
+	public(Handle:hRequest, bool:bFailure, offset, bytesreceived),
+	public(Handle:hRequest, bool:bFailure, offset, bytesreceived, any:data1),
+	public(Handle:hRequest, bool:bFailure, offset, bytesreceived, any:data1, any:data2)
+};
+
+native bool:SteamWorks_SetHTTPCallbacks(Handle:hHandle, SteamWorksHTTPRequestCompleted:fCompleted = INVALID_FUNCTION, SteamWorksHTTPHeadersReceived:fHeaders = INVALID_FUNCTION, SteamWorksHTTPDataReceived:fData = INVALID_FUNCTION, Handle:hCalling = INVALID_HANDLE);
+native bool:SteamWorks_SendHTTPRequest(Handle:hRequest);
+native bool:SteamWorks_DeferHTTPRequest(Handle:hRequest);
+native bool:SteamWorks_PrioritizeHTTPRequest(Handle:hRequest);
+native bool:SteamWorks_GetHTTPResponseHeaderSize(Handle:hRequest, const String:sHeader[], &size);
+native bool:SteamWorks_GetHTTPResponseHeaderValue(Handle:hRequest, const String:sHeader[], String:sValue[], size);
+native bool:SteamWorks_GetHTTPResponseBodySize(Handle:hRequest, &size);
+native bool:SteamWorks_GetHTTPResponseBodyData(Handle:hRequest, String:sBody[], length);
+native bool:SteamWorks_GetHTTPDownloadProgressPct(Handle:hRequest, &Float:percent);
+native bool:SteamWorks_SetHTTPRequestRawPostBody(Handle:hRequest, const String:sContentType[], const String:sBody[], bodylen);
+
+funcenum SteamWorksHTTPBodyCallback
+{
+	public(const String:sData[]),
+	public(const String:sData[], any:value),
+	public(const data[], any:value, datalen)
+};
+
+native bool:SteamWorks_GetHTTPResponseBodyCallback(Handle:hRequest, SteamWorksHTTPBodyCallback:fCallback, any:data = 0);
 
 forward SW_OnValidateClient(ownerauthid, authid);
 forward SteamWorks_OnValidateClient(ownerauthid, authid);
