@@ -545,6 +545,64 @@ static cell_t sm_SetHTTPRequestRawPostBody(IPluginContext *pContext, const cell_
 	return pHTTP->SetHTTPRequestRawPostBody(pRequest->request, pName, reinterpret_cast<uint8_t *>(pBuffer), params[4]) ? 1 : 0;
 }
 
+static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamHTTP *pHTTP = GetHTTPPointer();
+	if (pHTTP == NULL)
+	{
+		return 0;
+	}
+
+	HandleError err;
+	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
+
+	SteamWorksHTTPRequest *pRequest;
+	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
+		!= HandleError_None)
+	{
+		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
+	}
+
+	IPlugin *pPlugin;
+	if (params[4] == BAD_HANDLE)
+	{
+		pPlugin = plsys->FindPluginByContext(pContext->GetContext());
+	} else {
+		pPlugin = plsys->PluginFromHandle(params[4], &err);
+
+		if (!pPlugin)
+		{
+			return pContext->ThrowNativeError("Plugin handle %x is invalid (error %d)", params[4], err);
+		}
+	}
+
+	IPluginFunction *pFunction = pPlugin->GetBaseContext()->GetFunctionById(params[2]);
+	if (!pFunction)
+	{
+		return pContext->ThrowNativeError("Invalid function id (%X)", params[2]);
+	}
+
+	uint32_t size;
+	if (pHTTP->GetHTTPResponseBodySize(pRequest->request, &size) == false)
+	{
+		return 0;
+	}
+
+	size_t celllen = ((size / sizeof(cell_t)) + 1);
+	cell_t *pBuffer = new cell_t[celllen+1];
+
+	if (pHTTP->GetHTTPResponseBodyData(pRequest->request, reinterpret_cast<uint8_t *>(pBuffer), size) == false)
+	{
+		return 0;
+	}
+
+	pBuffer[celllen] = '\0'; /* Incase users do something bad; we want to protect userspace; kind of. */
+	pFunction->PushArray(pBuffer, celllen); /* Strings do a copy... it's really bad :( */
+	pFunction->PushCell(params[3]);
+	pFunction->Execute(NULL);
+	return 1;
+}
+
 static sp_nativeinfo_t httpnatives[] = {
 	{"SteamWorks_CreateHTTPRequest",				sm_CreateHTTPRequest},
 	{"SteamWorks_SetHTTPRequestContextValue",				sm_SetHTTPRequestContextValue},
@@ -561,6 +619,7 @@ static sp_nativeinfo_t httpnatives[] = {
 	{"SteamWorks_GetHTTPResponseBodyData",				sm_GetHTTPResponseBodyData},
 	{"SteamWorks_GetHTTPDownloadProgressPct",				sm_GetHTTPDownloadProgressPct},
 	{"SteamWorks_SetHTTPRequestRawPostBody",				sm_SetHTTPRequestRawPostBody},
+	{"SteamWorks_GetHTTPResponseBodyCallback",				sm_GetHTTPResponseBodyCallback},
 	{NULL,											NULL}
 };
 
