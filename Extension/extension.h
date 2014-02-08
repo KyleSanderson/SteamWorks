@@ -49,6 +49,7 @@
 #include "swgshooks.h"
 #include "ssnatives.h"
 #include "swgsdetours.h"
+#include "swhttp.h"
 
 /**
  * @brief Sample implementation of the SDK Extension.
@@ -139,6 +140,8 @@ public:
 	SteamWorksGSHooks *pGSHooks;
 	SteamWorksSSNatives *pSSNatives;
 	SteamWorksGSDetours *pGSDetours;
+	SteamWorksHTTP *pSWHTTP;
+	SteamWorksHTTPNatives *pSWHTTPNatives;
 };
 
 extern SteamWorks g_SteamWorks;

@@ -27,7 +27,7 @@ PROJECT = SteamWorks
 USESH = true
 USECD = true
 
-OBJECTS = sdk/smsdk_ext.cpp extension.cpp swgameserver.cpp swgamedata.cpp swforwards.cpp gsnatives.cpp swgshooks.cpp swgsdetours.cpp ssnatives.cpp
+OBJECTS = sdk/smsdk_ext.cpp extension.cpp swgameserver.cpp swgamedata.cpp swforwards.cpp gsnatives.cpp swgshooks.cpp swgsdetours.cpp ssnatives.cpp swhttp.cpp swhttprequest.cpp
 
 ifeq "$(USECD)" "true"
 	OBJECTS += CDetour/detours.cpp asm/asm.c

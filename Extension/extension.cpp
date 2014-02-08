@@ -45,7 +45,9 @@ bool SteamWorks::SDK_OnLoad(char *error, size_t maxlength, bool late)
 {
 	this->pSWGameData = new SteamWorksGameData;
 	this->pSWGameServer = new SteamWorksGameServer;
+	this->pSWHTTP = new SteamWorksHTTP;
 	
+	this->pSWHTTPNatives = new SteamWorksHTTPNatives;
 	this->pSWForward = new SteamWorksForwards;
 	this->pGSNatives = new SteamWorksGSNatives;
 	this->pGSHooks = new SteamWorksGSHooks;
@@ -61,7 +63,9 @@ void SteamWorks::SDK_OnUnload()
 	delete this->pGSHooks;
 	delete this->pGSNatives;
 	delete this->pSWForward;
+	delete this->pSWHTTPNatives;
 	
+	delete this->pSWHTTP;
 	delete this->pSWGameServer;
 	delete this->pSWGameData;
 }
