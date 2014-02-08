@@ -599,6 +599,7 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 	pBuffer[celllen] = '\0'; /* Incase users do something bad; we want to protect userspace; kind of. */
 	pFunction->PushArray(pBuffer, celllen); /* Strings do a copy... it's really bad :( */
 	pFunction->PushCell(params[3]);
+	pFunction->PushCell(celllen);
 	pFunction->Execute(NULL);
 
 	delete pBuffer;
