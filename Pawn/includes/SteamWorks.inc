@@ -236,7 +236,7 @@ funcenum SteamWorksHTTPBodyCallback
 	public(const data[], any:value, datalen)
 };
 
-native bool:SteamWorks_GetHTTPResponseBodyCallback(Handle:hRequest, SteamWorksHTTPBodyCallback:fCallback, any:data = 0);
+native bool:SteamWorks_GetHTTPResponseBodyCallback(Handle:hRequest, SteamWorksHTTPBodyCallback:fCallback, any:data = 0, Handle:hPlugin = INVALID_HANDLE);
 
 forward SW_OnValidateClient(ownerauthid, authid);
 forward SteamWorks_OnValidateClient(ownerauthid, authid);
