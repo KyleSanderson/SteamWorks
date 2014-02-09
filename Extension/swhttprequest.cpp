@@ -593,6 +593,7 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 
 	if (pHTTP->GetHTTPResponseBodyData(pRequest->request, reinterpret_cast<uint8_t *>(pBuffer), size) == false)
 	{
+		delete [] pBuffer;
 		return 0;
 	}
 
@@ -602,7 +603,7 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 	pFunction->PushCell(celllen);
 	pFunction->Execute(NULL);
 
-	delete pBuffer;
+	delete [] pBuffer;
 	return 1;
 }
 
