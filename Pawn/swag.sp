@@ -43,7 +43,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 	CreateNative("Steam_ForceHeartbeat", native_ForceHeartbeat);
 	
 	g_hSteamServersConnected = CreateGlobalForward("Steam_SteamServersConnected", ET_Ignore);
-	g_hSteamServersDisonnected = CreateGlobalForward("Steam_SteamServersDisconnected", ET_Ignore);
+	g_hSteamServersDisconnected = CreateGlobalForward("Steam_SteamServersDisconnected", ET_Ignore);
 	return APLRes_Success;
 }
 
