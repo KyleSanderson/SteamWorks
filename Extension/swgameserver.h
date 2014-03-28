@@ -34,6 +34,7 @@ class SteamWorksGameServer
 		ISteamNetworking *GetNetworking(void);
 		ISteamGameServerStats *GetServerStats(void);
 		ISteamHTTP *GetHTTP(void);
+		ISteamMatchmaking *GetMatchmaking(void);
 	public:
 		void Reset(void);
 	private:
@@ -45,6 +46,7 @@ class SteamWorksGameServer
 		ISteamNetworking *m_pNetworking;
 		ISteamGameServerStats *m_pStats;
 		ISteamHTTP *m_pHTTP;
+		ISteamMatchmaking *m_pMatchmaking;
 		bool loaded;
 };
 

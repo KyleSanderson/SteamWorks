@@ -55,6 +55,7 @@ void SteamWorksGameServer::Reset(void)
 	this->m_pNetworking = NULL;
 	this->m_pStats = NULL;
 	this->m_pHTTP = NULL;
+	this->m_pMatchmaking = NULL;
 }
 
 ISteamClient *SteamWorksGameServer::GetSteamClient(void)
@@ -138,6 +139,22 @@ ISteamHTTP *SteamWorksGameServer::GetHTTP(void)
 	}
 	
 	return this->m_pHTTP;
+}
+
+ISteamMatchmaking *SteamWorksGameServer::GetMatchmaking(void)
+{
+	if (this->m_pMatchmaking == NULL && this->GetSteamClient() != NULL)
+	{
+		HSteamUser hSteamUser;
+		HSteamPipe hSteamPipe;
+		GetUserAndPipe(hSteamUser, hSteamPipe);
+		
+		const char *pVersion = STEAMMATCHMAKING_INTERFACE_VERSION;
+		GetGameSpecificConfigInterface("SteamMatchmakingVersion", pVersion);
+		this->m_pMatchmaking = this->GetSteamClient()->GetISteamMatchmaking(hSteamUser, hSteamPipe, STEAMMATCHMAKING_INTERFACE_VERSION);
+	}
+	
+	return this->m_pMatchmaking;
 }
 
 void SteamWorksGameServer::GetUserAndPipe(HSteamUser &hSteamUser, HSteamPipe &hSteamPipe)
