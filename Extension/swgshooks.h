@@ -36,6 +36,7 @@ class SteamWorksGSHooks
 	public:
 		bool WasRestartRequested(void);
 		void LogOnAnonymous(void);
+		EBeginAuthSessionResult BeginAuthSession(const void*, int, CSteamID);
 		
 	private:
 		IForward *pFORR; /* On Restart Requested. */
