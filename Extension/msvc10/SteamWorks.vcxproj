@@ -186,18 +186,28 @@
     <ClCompile Include="..\extension.cpp" />
     <ClCompile Include="..\gsnatives.cpp" />
     <ClCompile Include="..\sdk\smsdk_ext.cpp" />
+    <ClCompile Include="..\ssnatives.cpp" />
     <ClCompile Include="..\swforwards.cpp" />
     <ClCompile Include="..\swgamedata.cpp" />
     <ClCompile Include="..\swgameserver.cpp" />
+    <ClCompile Include="..\swgsdetours.cpp" />
+    <ClCompile Include="..\swgshooks.cpp" />
+    <ClCompile Include="..\swhttp.cpp" />
+    <ClCompile Include="..\swhttprequest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\extension.h" />
     <ClInclude Include="..\gsnatives.h" />
     <ClInclude Include="..\sdk\smsdk_config.h" />
     <ClInclude Include="..\sdk\smsdk_ext.h" />
+    <ClInclude Include="..\ssnatives.h" />
     <ClInclude Include="..\swforwards.h" />
     <ClInclude Include="..\swgamedata.h" />
     <ClInclude Include="..\swgameserver.h" />
+    <ClInclude Include="..\swgsdetours.h" />
+    <ClInclude Include="..\swgshooks.h" />
+    <ClInclude Include="..\swhttp.h" />
+    <ClInclude Include="..\swhttprequest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
