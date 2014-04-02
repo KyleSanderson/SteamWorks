@@ -14,6 +14,7 @@
     <ProjectGuid>{B3E797CF-4E77-4C9D-B8A8-7589B6902206}</ProjectGuid>
     <RootNamespace>sdk</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>SteamWorks</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - Bloody Good Time|Win32'" Label="Configuration">
@@ -28,10 +29,12 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -75,8 +78,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..;..\sdk;..\..\..\public;..\..\..\public\extensions;..\..\..\public\sourcepawn;$(STEAMWORKS_SDK)\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SDK_EXPORTS;_CRT_SECURE_NO_DEPRECATE;SOURCEMOD_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..;..\sdk;$(MMSOURCE110)\core;$(MMSOURCE110)\core\sourcehook;$(SOURCEMOD15)\public;$(SOURCEMOD15)\public\sourcepawn;$(HL2SDK2013)\public;$(HL2SDK2013)\public\tier0;$(HL2SDK2013)\public\tier1;$(STEAMWORKS_SDK)\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SDK_EXPORTS;_CRT_SECURE_NO_DEPRECATE;SOURCEMOD_BUILD;VERSION_SAFE_STEAM_API_INTERFACES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -95,13 +98,14 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;$(HL2SDK)\lib\public\steam_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tier0.lib;tier1.lib;steam_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(STEAMWORKS_SDK)\redistributable_bin\;$(HL2SDK2013)\lib\public\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..;..\sdk;..\..\..\public;..\..\..\public\extensions;..\..\..\public\sourcepawn;$(STEAMWORKS_SDK)\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\sdk;$(MMSOURCE110)\core;$(MMSOURCE110)\core\sourcehook;$(SOURCEMOD15)\public;$(SOURCEMOD15)\public\sourcepawn;$(HL2SDK2013)\public;$(HL2SDK2013)\public\tier0;$(HL2SDK2013)\public\tier1;$(STEAMWORKS_SDK)\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SDK_EXPORTS;_CRT_SECURE_NO_DEPRECATE;SOURCEMOD_BUILD;VERSION_SAFE_STEAM_API_INTERFACES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
@@ -122,7 +126,8 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;$(HL2SDK)\lib\public\steam_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tier0.lib;tier1.lib;steam_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(STEAMWORKS_SDK)\redistributable_bin\;$(HL2SDK2013)\lib\public\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug - Bloody Good Time|Win32'">
@@ -180,21 +185,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\asm\asm.c" />
+    <ClCompile Include="..\CDetour\detours.cpp" />
     <ClCompile Include="..\extension.cpp" />
     <ClCompile Include="..\gsnatives.cpp" />
     <ClCompile Include="..\sdk\smsdk_ext.cpp" />
+    <ClCompile Include="..\ssnatives.cpp" />
     <ClCompile Include="..\swforwards.cpp" />
     <ClCompile Include="..\swgamedata.cpp" />
     <ClCompile Include="..\swgameserver.cpp" />
+    <ClCompile Include="..\swgsdetours.cpp" />
+    <ClCompile Include="..\swgshooks.cpp" />
+    <ClCompile Include="..\swhttp.cpp" />
+    <ClCompile Include="..\swhttprequest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\asm\asm.h" />
+    <ClInclude Include="..\CDetour\detourhelpers.h" />
+    <ClInclude Include="..\CDetour\detours.h" />
     <ClInclude Include="..\extension.h" />
     <ClInclude Include="..\gsnatives.h" />
     <ClInclude Include="..\sdk\smsdk_config.h" />
     <ClInclude Include="..\sdk\smsdk_ext.h" />
+    <ClInclude Include="..\ssnatives.h" />
     <ClInclude Include="..\swforwards.h" />
     <ClInclude Include="..\swgamedata.h" />
     <ClInclude Include="..\swgameserver.h" />
+    <ClInclude Include="..\swgsdetours.h" />
+    <ClInclude Include="..\swgshooks.h" />
+    <ClInclude Include="..\swhttp.h" />
+    <ClInclude Include="..\swhttprequest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

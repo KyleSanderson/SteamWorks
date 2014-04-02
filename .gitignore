@@ -1,0 +1,28 @@
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# visual studio
+*.sdf
+*.opensdf
+
+# user files
+*.suo
+*.user
+
+# msvc temporaries/binaries
+[Dd]ebug - */
+[Rr]elease - */
+[Dd]ebug/
+[Rr]elease/
