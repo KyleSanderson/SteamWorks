@@ -16,6 +16,18 @@
     <Filter Include="SourceMod SDK">
       <UniqueIdentifier>{31958233-BB2D-4e41-A8F9-CE8A4684F436}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\CDetour">
+      <UniqueIdentifier>{165bd3d1-013b-4a7c-9ae8-7726e1167ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\asm">
+      <UniqueIdentifier>{ddc20a5f-f759-411d-b126-0e969544e25a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CDetour">
+      <UniqueIdentifier>{a4151558-d2e9-4b94-bd9f-9e411544f549}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\asm">
+      <UniqueIdentifier>{760cee12-5e87-4fa0-a3f9-bb85ea8c88de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\extension.cpp">
@@ -50,6 +62,12 @@
     </ClCompile>
     <ClCompile Include="..\swhttprequest.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CDetour\detours.cpp">
+      <Filter>Source Files\CDetour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\asm\asm.c">
+      <Filter>Source Files\asm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +106,15 @@
     </ClInclude>
     <ClInclude Include="..\swhttprequest.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CDetour\detourhelpers.h">
+      <Filter>Header Files\CDetour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CDetour\detours.h">
+      <Filter>Header Files\CDetour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\asm\asm.h">
+      <Filter>Header Files\asm</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

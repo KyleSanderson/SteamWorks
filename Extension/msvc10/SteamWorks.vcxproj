@@ -183,6 +183,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\asm\asm.c" />
+    <ClCompile Include="..\CDetour\detours.cpp" />
     <ClCompile Include="..\extension.cpp" />
     <ClCompile Include="..\gsnatives.cpp" />
     <ClCompile Include="..\sdk\smsdk_ext.cpp" />
@@ -196,6 +198,9 @@
     <ClCompile Include="..\swhttprequest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\asm\asm.h" />
+    <ClInclude Include="..\CDetour\detourhelpers.h" />
+    <ClInclude Include="..\CDetour\detours.h" />
     <ClInclude Include="..\extension.h" />
     <ClInclude Include="..\gsnatives.h" />
     <ClInclude Include="..\sdk\smsdk_config.h" />
