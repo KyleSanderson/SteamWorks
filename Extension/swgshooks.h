@@ -41,6 +41,7 @@ class SteamWorksGSHooks
 	private:
 		IForward *pFORR; /* On Restart Requested. */
 		IForward *pFOTR; /* On Token Requested. */
+		IForward *pOBAS; /* On Begin Auth Session. */
 		unsigned char uHooked;
 };
 

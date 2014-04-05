@@ -82,7 +82,7 @@ void SteamWorksGSHooks::LogOnAnonymous(void)
 
 EBeginAuthSessionResult SteamWorksGSHooks::BeginAuthSession(const void *pAuthTicket, int cbAuthTicket, CSteamID steamID)
 {
-	if (this->pOBAS->GetFunctionCount != 0)
+	if (this->pOBAS->GetFunctionCount() != 0)
 	{
 		this->pOBAS->PushArray(pAuthTicket, cbAuthTicket);
 		this->pOBAS->PushCell(cbAuthTicket);
