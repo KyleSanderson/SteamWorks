@@ -34,9 +34,9 @@ DETOUR_DECL_STATIC0(SteamAPIShutdown, void)
 	DETOUR_STATIC_CALL(SteamAPIShutdown)(); /* We're not a monster. */
 }
 
-DETOUR_DECL_STATIC6(SteamGameServer_InitSafe, bool, uint32, unIP, uint16, usSteamPort, uint16, usGamePort, uint16, usQueryPort, EServerMode, eServerMode, const char *, pchVersionString)
+DETOUR_DECL_STATIC6(SteamGameServer_InitSafeDetour, bool, uint32, unIP, uint16, usSteamPort, uint16, usGamePort, uint16, usQueryPort, EServerMode, eServerMode, const char *, pchVersionString)
 {
-	bool bRet = DETOUR_STATIC_CALL(SteamGameServer_InitSafe)(unIP, usSteamPort, usGamePort, usQueryPort, eServerMode, pchVersionString); /* Call to init game interfaces. */
+	bool bRet = DETOUR_STATIC_CALL(SteamGameServer_InitSafeDetour)(unIP, usSteamPort, usGamePort, usQueryPort, eServerMode, pchVersionString); /* Call to init game interfaces. */
 	
 	if (g_SteamWorks.pSWGameServer != NULL && g_SteamWorks.pGSHooks != NULL)
 	{
@@ -103,7 +103,7 @@ SteamWorksGSDetours::SteamWorksGSDetours()
 
 	if (pSteamSafeInitAddress != NULL)
 	{
-		this->m_pSafeInitDetour = DETOUR_CREATE_STATIC_FIXED(SteamGameServer_InitSafe, pSteamSafeInitAddress);
+		this->m_pSafeInitDetour = DETOUR_CREATE_STATIC_FIXED(SteamGameServer_InitSafeDetour, pSteamSafeInitAddress);
 		this->m_pSafeInitDetour->EnableDetour();
 	}
 	else
