@@ -43,6 +43,8 @@ SMEXT_LINK(&g_SteamWorks);
  
 bool SteamWorks::SDK_OnLoad(char *error, size_t maxlength, bool late)
 {
+	sharesys->RegisterLibrary(myself, "SteamWorks");
+
 	this->pSWGameData = new SteamWorksGameData;
 	this->pSWGameServer = new SteamWorksGameServer;
 	this->pSWHTTP = new SteamWorksHTTP;
