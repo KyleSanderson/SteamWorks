@@ -84,7 +84,9 @@ EBeginAuthSessionResult SteamWorksGSHooks::BeginAuthSession(const void *pAuthTic
 {
 	if (this->pOBAS->GetFunctionCount() != 0)
 	{
-		this->pOBAS->PushArray(pAuthTicket, cbAuthTicket);
+		char *pszAuthTicket = reinterpret_cast<char *>(const_cast<void *>(pAuthTicket));
+
+		this->pOBAS->PushStringEx(pszAuthTicket, cbAuthTicket, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
 		this->pOBAS->PushCell(cbAuthTicket);
 		this->pOBAS->PushCell(steamID.GetAccountID());
 		this->pOBAS->Execute(NULL);

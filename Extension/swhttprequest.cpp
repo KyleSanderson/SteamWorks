@@ -588,8 +588,7 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 		return 0;
 	}
 
-	size_t celllen = ((size / sizeof(cell_t)) + 1);
-	cell_t *pBuffer = new cell_t[celllen+1];
+	char *pBuffer = new char[size+1];
 
 	if (pHTTP->GetHTTPResponseBodyData(pRequest->request, reinterpret_cast<uint8_t *>(pBuffer), size) == false)
 	{
@@ -597,10 +596,10 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 		return 0;
 	}
 
-	pBuffer[celllen] = '\0'; /* Incase users do something bad; we want to protect userspace; kind of. */
-	pFunction->PushArray(pBuffer, celllen); /* Strings do a copy... it's really bad :( */
+	pBuffer[size] = '\0'; /* Incase users do something bad; we want to protect userspace; kind of. */
+	pFunction->PushStringEx(pBuffer, size, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
 	pFunction->PushCell(params[3]);
-	pFunction->PushCell(celllen);
+	pFunction->PushCell(size);
 	pFunction->Execute(NULL);
 
 	delete [] pBuffer;
