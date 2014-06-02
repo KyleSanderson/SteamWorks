@@ -194,8 +194,8 @@ native bool:SteamWorks_GetStatAuthIDFloat(authid, const String:sKey[], &Float:va
 native Handle:SteamWorks_CreateHTTPRequest(EHTTPMethod:method, const String:sURL[]);
 native bool:SteamWorks_SetHTTPRequestContextValue(Handle:hHandle, any:data1, any:data2=0);
 native bool:SteamWorks_SetHTTPRequestNetworkActivityTimeout(Handle:hHandle, timeout);
-native bool:SteamWorks_SetHTTPRequestHeaderValue(Handle:hHandle, const String:sName[], const Strnig:sValue[]);
-native bool:SteamWorks_SetHTTPRequestGetOrPostParameter(Handle:hHandle, const String:sName[], const Strnig:sValue[]);
+native bool:SteamWorks_SetHTTPRequestHeaderValue(Handle:hHandle, const String:sName[], const String:sValue[]);
+native bool:SteamWorks_SetHTTPRequestGetOrPostParameter(Handle:hHandle, const String:sName[], const String:sValue[]);
 
 funcenum SteamWorksHTTPRequestCompleted
 {
