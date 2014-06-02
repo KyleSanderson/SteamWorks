@@ -183,6 +183,7 @@ native bool:SteamWorks_ClearRules();
 native bool:SteamWorks_ForceHeartbeat();
 
 native EUserHasLicenseForAppResult:SteamWorks_HasLicenseForApp(client, app);
+native SteamWorks_GetClientSteamID(client, String:sSteamID[], length);
 
 native bool:SteamWorks_RequestStatsAuthID(authid, appid);
 native bool:SteamWorks_RequestStats(client, appid);
@@ -277,6 +278,7 @@ public __ext_SteamWorks_SetNTVOptional()
 	MarkNativeAsOptional("SteamWorks_ForceHeartbeat");
 
 	MarkNativeAsOptional("SteamWorks_HasLicenseForApp");
+	MarkNativeAsOptional("SteamWorks_GetClientSteamID");
 
 	MarkNativeAsOptional("SteamWorks_RequestStatsAuthID");
 	MarkNativeAsOptional("SteamWorks_RequestStats");

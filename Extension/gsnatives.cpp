@@ -180,6 +180,27 @@ static cell_t sm_UserHasLicenseForApp(IPluginContext *pContext, const cell_t *pa
 	return pServer->UserHasLicenseForApp(checkid, params[2]);
 }
 
+static cell_t sm_GetClientSteamID(IPluginContext *pContext, const cell_t *params)
+{
+	int client = gamehelpers->ReferenceToIndex(params[1]);
+	IGamePlayer *pPlayer = playerhelpers->GetGamePlayer(client);
+
+	if (pPlayer == NULL || pPlayer->IsConnected() == false)
+	{
+		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
+	}
+
+	CSteamID steamId = CreateCommonCSteamID(pPlayer, params, 4, 5);
+
+	char *steamIdBuffer;
+	pContext->LocalToString(params[2], &steamIdBuffer);
+
+	int numBytes = g_pSM->Format(steamIdBuffer, params[3], "%llu", steamId.ConvertToUint64());
+	numBytes++; // account for null terminator
+	
+	return numBytes;
+}
+
 static sp_nativeinfo_t gsnatives[] = {
 	{"SteamWorks_IsVACEnabled",				sm_IsVACEnabled},
 	{"SteamWorks_GetPublicIP",				sm_GetPublicIP},
@@ -191,6 +212,7 @@ static sp_nativeinfo_t gsnatives[] = {
 	{"SteamWorks_ClearRules",						sm_ClearRules},
 	{"SteamWorks_ForceHeartbeat",				sm_ForceHeartbeat},
 	{"SteamWorks_HasLicenseForApp",			sm_UserHasLicenseForApp},
+	{"SteamWorks_GetClientSteamID",			sm_GetClientSteamID},
 	{NULL,											NULL}
 };
 
