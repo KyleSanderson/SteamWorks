@@ -275,12 +275,33 @@ public __ext_SteamWorks_SetNTVOptional()
 	MarkNativeAsOptional("SteamWorks_SetRule");
 	MarkNativeAsOptional("SteamWorks_ClearRules");
 	MarkNativeAsOptional("SteamWorks_ForceHeartbeat");
+
 	MarkNativeAsOptional("SteamWorks_HasLicenseForApp");
+
 	MarkNativeAsOptional("SteamWorks_RequestStatsAuthID");
 	MarkNativeAsOptional("SteamWorks_RequestStats");
 	MarkNativeAsOptional("SteamWorks_GetStatCell");
 	MarkNativeAsOptional("SteamWorks_GetStatAuthIDCell");
 	MarkNativeAsOptional("SteamWorks_GetStatFloat");
 	MarkNativeAsOptional("SteamWorks_GetStatAuthIDFloat");
+
+	MarkNativeAsOptional("SteamWorks_CreateHTTPRequest");
+	MarkNativeAsOptional("SteamWorks_SetHTTPRequestContextValue");
+	MarkNativeAsOptional("SteamWorks_SetHTTPRequestNetworkActivityTimeout");
+	MarkNativeAsOptional("SteamWorks_SetHTTPRequestHeaderValue");
+	MarkNativeAsOptional("SteamWorks_SetHTTPRequestGetOrPostParameter");
+
+	MarkNativeAsOptional("SteamWorks_SetHTTPCallbacks");
+	MarkNativeAsOptional("SteamWorks_SendHTTPRequest");
+	MarkNativeAsOptional("SteamWorks_DeferHTTPRequest");
+	MarkNativeAsOptional("SteamWorks_PrioritizeHTTPRequest");
+	MarkNativeAsOptional("SteamWorks_GetHTTPResponseHeaderSize");
+	MarkNativeAsOptional("SteamWorks_GetHTTPResponseHeaderValue");
+	MarkNativeAsOptional("SteamWorks_GetHTTPResponseBodySize");
+	MarkNativeAsOptional("SteamWorks_GetHTTPResponseBodyData");
+	MarkNativeAsOptional("SteamWorks_GetHTTPDownloadProgressPct");
+	MarkNativeAsOptional("SteamWorks_SetHTTPRequestRawPostBody");
+
+	MarkNativeAsOptional("SteamWorks_GetHTTPResponseBodyCallback");
 }
 #endif
