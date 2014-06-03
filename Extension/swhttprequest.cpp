@@ -606,6 +606,57 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 	return 1;
 }
 
+static cell_t sm_WriteHTTPResponseBodyToFile(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamHTTP *pHTTP = GetHTTPPointer();
+	if (pHTTP == NULL)
+	{
+		return 0;
+	}
+
+	HandleError err;
+	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
+
+	SteamWorksHTTPRequest *pRequest;
+	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
+		!= HandleError_None)
+	{
+		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
+	}
+
+	uint32_t size;
+	if (pHTTP->GetHTTPResponseBodySize(pRequest->request, &size) == false)
+	{
+		return 0;
+	}
+
+	char *pBuffer = new char[size];
+
+	if (pHTTP->GetHTTPResponseBodyData(pRequest->request, reinterpret_cast<uint8_t *>(pBuffer), size) == false)
+	{
+		delete [] pBuffer;
+		return 0;
+	}
+
+	char *pFilePath;
+	pContext->LocalToString(params[2], &pFilePath);
+
+	FileHandle_t fileHandle = g_SteamWorks.pFileSystem->Open(pFilePath, "wb", "MOD");
+
+	if (!fileHandle)
+	{
+		delete [] pBuffer;
+		return pContext->ThrowNativeError("Unable to open %s for writing", pFilePath);
+	}
+
+	g_SteamWorks.pFileSystem->Write(pBuffer, size, fileHandle);
+
+	delete [] pBuffer;
+	g_SteamWorks.pFileSystem->Close(fileHandle);
+
+	return 1;
+}
+
 static sp_nativeinfo_t httpnatives[] = {
 	{"SteamWorks_CreateHTTPRequest",				sm_CreateHTTPRequest},
 	{"SteamWorks_SetHTTPRequestContextValue",				sm_SetHTTPRequestContextValue},
@@ -623,6 +674,7 @@ static sp_nativeinfo_t httpnatives[] = {
 	{"SteamWorks_GetHTTPDownloadProgressPct",				sm_GetHTTPDownloadProgressPct},
 	{"SteamWorks_SetHTTPRequestRawPostBody",				sm_SetHTTPRequestRawPostBody},
 	{"SteamWorks_GetHTTPResponseBodyCallback",				sm_GetHTTPResponseBodyCallback},
+	{"SteamWorks_WriteHTTPResponseBodyToFile",				sm_WriteHTTPResponseBodyToFile},
 	{NULL,											NULL}
 };
 
