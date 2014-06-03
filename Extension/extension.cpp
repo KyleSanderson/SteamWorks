@@ -72,6 +72,20 @@ void SteamWorks::SDK_OnUnload()
 	delete this->pSWGameData;
 }
 
+bool SteamWorks::SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlen, bool late)
+{
+	GET_V_IFACE_CURRENT(GetFileSystemFactory, this->pFileSystem, IFileSystem, FILESYSTEM_INTERFACE_VERSION);
+
+	return true;
+}
+
+bool SteamWorks::SDK_OnMetamodUnload(char *error, size_t maxlen)
+{
+	this->pFileSystem = NULL;
+
+	return true;
+}
+
 CSteamID SteamWorks::CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *params, unsigned char universeplace = 2, unsigned char typeplace = 3)
 {
 	EUniverse universe = k_EUniversePublic;

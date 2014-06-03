@@ -51,6 +51,8 @@
 #include "swgsdetours.h"
 #include "swhttp.h"
 
+#include <filesystem.h>
+
 /**
  * @brief Sample implementation of the SDK Extension.
  * Note: Uncomment one of the pre-defined virtual functions in order to use it.
@@ -103,7 +105,7 @@ public:
 	 * @param late			Whether or not Metamod considers this a late load.
 	 * @return				True to succeed, false to fail.
 	 */
-	//virtual bool SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlength, bool late);
+	virtual bool SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlength, bool late);
 
 	/**
 	 * @brief Called when Metamod is detaching, after the extension version is called.
@@ -113,7 +115,7 @@ public:
 	 * @param maxlength		Maximum size of error buffer.
 	 * @return				True to succeed, false to fail.
 	 */
-	//virtual bool SDK_OnMetamodUnload(char *error, size_t maxlength);
+	virtual bool SDK_OnMetamodUnload(char *error, size_t maxlength);
 
 	/**
 	 * @brief Called when Metamod's pause state is changing.
@@ -142,6 +144,8 @@ public:
 	SteamWorksGSDetours *pGSDetours;
 	SteamWorksHTTP *pSWHTTP;
 	SteamWorksHTTPNatives *pSWHTTPNatives;
+
+	IFileSystem *pFileSystem;
 };
 
 extern SteamWorks g_SteamWorks;
