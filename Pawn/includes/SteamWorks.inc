@@ -238,6 +238,7 @@ funcenum SteamWorksHTTPBodyCallback
 };
 
 native bool:SteamWorks_GetHTTPResponseBodyCallback(Handle:hRequest, SteamWorksHTTPBodyCallback:fCallback, any:data = 0, Handle:hPlugin = INVALID_HANDLE);
+native bool:SteamWorks_WriteHTTPResponseBodyToFile(Handle:hRequest, const String:sFileName[]);
 
 forward SW_OnValidateClient(ownerauthid, authid);
 forward SteamWorks_OnValidateClient(ownerauthid, authid);
@@ -305,5 +306,6 @@ public __ext_SteamWorks_SetNTVOptional()
 	MarkNativeAsOptional("SteamWorks_SetHTTPRequestRawPostBody");
 
 	MarkNativeAsOptional("SteamWorks_GetHTTPResponseBodyCallback");
+	MarkNativeAsOptional("SteamWorks_WriteHTTPResponseBodyToFile");
 }
 #endif
