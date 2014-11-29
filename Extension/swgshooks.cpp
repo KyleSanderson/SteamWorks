@@ -76,7 +76,7 @@ void SteamWorksGSHooks::LogOnAnonymous(void)
 	this->pFOTR->PushCell(sizeof(pToken));
 	this->pFOTR->Execute(NULL);
 
-	pGameServer->LogOn(pToken, pToken);
+	pGameServer->LogOn(pToken);
 	RETURN_META(MRES_SUPERCEDE);
 }
 
