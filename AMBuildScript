@@ -1,0 +1,316 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+import os, sys
+
+class SDK(object):
+  def __init__(self, sdk, ext, aDef, name, platform, dir):
+    self.folder = 'hl2sdk-' + dir
+    self.envvar = sdk
+    self.ext = ext
+    self.code = aDef
+    self.define = name
+    self.platform = platform
+    self.name = dir
+    self.path = None # Actual path
+
+WinOnly = ['windows']
+WinLinux = ['windows', 'linux']
+WinLinuxMac = ['windows', 'linux', 'mac']
+
+PossibleSDKs = {
+  'sdk2013': SDK('HL2SDK2013', '2.sdk2013', '9', 'SDK2013', WinLinuxMac, 'sdk2013'),
+}
+
+def ResolveEnvPath(env, folder):
+  if env in os.environ:
+    path = os.environ[env]
+    if os.path.isdir(path):
+      return path
+    return None
+
+  head = os.getcwd()
+  oldhead = None
+  while head != None and head != oldhead:
+    path = os.path.join(head, folder)
+    if os.path.isdir(path):
+      return path
+    oldhead = head
+    head, tail = os.path.split(head)
+
+  return None
+
+def Normalize(path):
+  return os.path.abspath(os.path.normpath(path))
+
+class SteamWorksConfig(object):
+  def __init__(self):
+    self.sdks = {}
+    self.binaries = []
+    self.mms_root = None
+    self.sm_root = None
+    self.steamworks_root = None
+    self.extensions = []
+
+  @property
+  def tag(self):
+    if builder.options.debug == '1':
+      return 'Debug'
+    return 'Release'
+
+  def detectSDKs(self):
+    sdk_list = builder.options.sdks.split(',')
+    use_all = sdk_list[0] == 'all'
+    use_present = sdk_list[0] == 'present'
+
+    for sdk_name in PossibleSDKs:
+      sdk = PossibleSDKs[sdk_name]
+      if builder.target_platform in sdk.platform:
+        if builder.options.hl2sdk_root:
+          sdk_path = os.path.join(builder.options.hl2sdk_root, sdk.folder)
+        else:
+          sdk_path = ResolveEnvPath(sdk.envvar, sdk.folder)
+        if sdk_path is None or not os.path.isdir(sdk_path):
+          if use_all or sdk_name in sdk_list:
+            raise Exception('Could not find a valid path for {0}'.format(sdk.envvar))
+          continue
+        if use_all or use_present or sdk_name in sdk_list:
+          sdk.path = Normalize(sdk_path)
+          self.sdks[sdk_name] = sdk
+
+    if len(self.sdks) < 1:
+      raise Exception('At least one SDK must be available.')
+
+    #METAMOD:SOURCE
+    if builder.options.mms_path:
+      self.mms_root = builder.options.mms_path
+    else:
+      self.mms_root = ResolveEnvPath('MMSOURCE110', 'mmsource-1.10')
+      if not self.mms_root:
+        self.mms_root = ResolveEnvPath('MMSOURCE10', 'metamod-1.10')
+      if not self.mms_root:
+        self.mms_root = ResolveEnvPath('MMSOURCE_DEV', 'mmsource-central')
+
+    if not self.mms_root or not os.path.isdir(self.mms_root):
+      raise Exception('Could not find a source copy of Metamod:Source')
+    self.mms_root = Normalize(self.mms_root)
+	
+	#SOURCEMOD
+    if builder.options.sm_path:
+      self.sm_root = builder.options.sm_path
+    else:
+      self.sm_root = ResolveEnvPath('SOURCEMOD16', 'sourcemod-1.6')
+      if not self.sm_root:
+        self.sm_root = ResolveEnvPath('SOURCEMOD', 'sourcemod-1.6')
+      if not self.sm_root:
+        self.sm_root = ResolveEnvPath('SMCENTRAL', 'sourcemod-central')
+
+    if not self.sm_root or not os.path.isdir(self.sm_root):
+      raise Exception('Could not find a source copy of Sourcemod')
+    self.sm_root = Normalize(self.sm_root)
+	
+	#STEAMWORKS
+    if builder.options.steamworks_path:
+      self.steamworks_root = builder.options.steamworks_path
+    else:
+      self.steamworks_root = ResolveEnvPath('STEAMWORKS', 'steamworks-sdk')
+      if not self.steamworks_root:
+        self.steamworks_root = ResolveEnvPath('STEAMWORKS', 'steamworks')
+      if not self.steamworks_root:
+        self.steamworks_root = ResolveEnvPath('STEAMWORKS', 'opensteamworks')
+
+    if not self.steamworks_root or not os.path.isdir(self.steamworks_root):
+      raise Exception('Could not find a source copy of SteamWorks')
+    self.steamworks_root = Normalize(self.steamworks_root)
+
+  def configure(self):
+    builder.AddConfigureFile('pushbuild.txt')
+
+    cxx = builder.DetectCompilers()
+
+    if cxx.like('gcc'):
+      cxx.defines += [
+        'stricmp=strcasecmp',
+        '_stricmp=strcasecmp',
+        '_snprintf=snprintf',
+        '_vsnprintf=vsnprintf',
+        'HAVE_STDINT_H',
+        'GNUC',
+      ]
+      cxx.cflags += [
+        '-pipe',
+        '-fno-strict-aliasing',
+        '-Wall',
+        '-Werror',
+        '-Wno-unused',
+        '-Wno-switch',
+        '-Wno-format',
+        '-Wno-format-security',
+        '-Wno-array-bounds',
+        '-msse',
+        '-m32',
+      ]
+      cxx.cxxflags += [
+          '-std=c++11',
+      ]
+
+      have_gcc = cxx.vendor == 'gcc'
+      have_clang = cxx.vendor == 'clang'
+      if have_clang or (have_gcc and cxx.version >= '4'):
+        cxx.cflags += ['-fvisibility=hidden']
+        cxx.cxxflags += ['-fvisibility-inlines-hidden']
+        if have_clang or (have_gcc and cxx.version >= '4.6'):
+          cxx.cflags += ['-Wno-narrowing']
+        if (have_gcc and cxx.version >= '4.7') or (have_clang and cxx.version >= '3'):
+          cxx.cxxflags += ['-Wno-delete-non-virtual-dtor']
+        if have_gcc and cxx.version >= '4.8':
+          cxx.cflags += ['-Wno-unused-result']
+      if have_clang:
+        cxx.cxxflags += ['-Wno-implicit-exception-spec-mismatch']
+        if (builder.target_platform == 'mac' and cxx.version >= '5.1') or cxx.version >= '3.4':
+          cxx.cxxflags += ['-Wno-deprecated-register']
+        else:
+          cxx.cxxflags += ['-Wno-deprecated']
+        cxx.cflags += ['-Wno-sometimes-uninitialized']
+
+      cxx.linkflags += ['-m32']
+      cxx.cxxflags += [
+        '-fno-exceptions',
+        '-fno-threadsafe-statics',
+        '-Wno-non-virtual-dtor',
+        '-Wno-overloaded-virtual',
+      ]
+
+      if have_gcc:
+        cxx.cflags += ['-mfpmath=sse']
+    elif cxx.vendor == 'msvc':
+      if builder.options.debug == '1':
+        cxx.cflags += ['/MTd']
+        cxx.linkflags += ['/NODEFAULTLIB:libcmt']
+      else:
+        cxx.cflags += ['/MT']
+      cxx.defines += [
+        '_CRT_SECURE_NO_DEPRECATE',
+        '_CRT_SECURE_NO_WARNINGS',
+        '_CRT_NONSTDC_NO_DEPRECATE',
+        '_ITERATOR_DEBUG_LEVEL=0',
+      ]
+      cxx.cflags += [
+        '/W3',
+      ]
+      cxx.cxxflags += [
+        '/EHsc',
+        '/GR-',
+        '/TP',
+      ]
+      cxx.linkflags += [
+        '/MACHINE:X86',
+        '/SUBSYSTEM:WINDOWS',
+        'kernel32.lib',
+        'user32.lib',
+        'gdi32.lib',
+        'winspool.lib',
+        'comdlg32.lib',
+        'advapi32.lib',
+        'shell32.lib',
+        'ole32.lib',
+        'oleaut32.lib',
+        'uuid.lib',
+        'odbc32.lib',
+        'odbccp32.lib',
+      ] 
+
+    # Optimization
+    if builder.options.opt == '1':
+      cxx.defines += ['NDEBUG']
+      if cxx.like('gcc'):
+        cxx.cflags += ['-O3']
+      elif cxx.like('msvc'):
+        cxx.cflags += ['/Ox']
+        cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
+
+    # Debugging
+    if builder.options.debug == '1':
+      cxx.defines += ['DEBUG', '_DEBUG']
+      if cxx.like('msvc'):
+        cxx.cflags += ['/Od', '/RTC1']
+        if cxx.version >= 1600:
+          cxx.cflags += ['/d2Zi+']
+
+    # This needs to be after our optimization flags which could otherwise disable it.
+    if cxx.vendor == 'msvc':
+      # Don't omit the frame pointer.
+      cxx.cflags += ['/Oy-']
+
+    # Platform-specifics
+    if builder.target_platform == 'linux':
+      cxx.defines += ['_LINUX', 'POSIX']
+      if cxx.vendor == 'gcc':
+        cxx.linkflags += ['-static-libgcc']
+      elif cxx.vendor == 'clang':
+        cxx.linkflags += ['-lgcc_eh']
+    elif builder.target_platform == 'mac':
+      cxx.defines += ['OSX', '_OSX', 'POSIX']
+      cxx.cflags += ['-mmacosx-version-min=10.5']
+      cxx.linkflags += [
+        '-mmacosx-version-min=10.5',
+        '-arch', 'i386',
+        '-lstdc++',
+        '-stdlib=libstdc++',
+      ]
+      cxx.cxxflags += ['-stdlib=libstdc++']
+    elif builder.target_platform == 'windows':
+      cxx.defines += ['WIN32', '_WINDOWS']
+	  
+  def ConfigureForExtension(self, context, compiler):
+    compiler.cxxincludes += [
+      os.path.join(context.currentSourcePath),
+      os.path.join(context.currentSourcePath, 'sdk'),
+      os.path.join(self.sm_root, 'public'),
+      os.path.join(self.sm_root, 'public', 'extensions'),
+      os.path.join(self.sm_root, 'public', 'sourcepawn'),
+    ]
+    return compiler
+	
+  def ConfigureForHL2(self, binary, sdk):
+    compiler = binary.compiler
+
+    if sdk.name == 'episode1':
+      mms_path = os.path.join(self.mms_root, 'core-legacy')
+    else:
+      mms_path = os.path.join(self.mms_root, 'core')
+
+    compiler.cxxincludes += [
+      os.path.join(mms_path),
+      os.path.join(mms_path, 'sourcehook'),
+    ]
+
+    defines = ['SE_' + PossibleSDKs[i].define + '=' + PossibleSDKs[i].code for i in PossibleSDKs]
+    compiler.defines += defines
+
+    if compiler.like('msvc'):
+      compiler.defines += ['COMPILER_MSVC', 'COMPILER_MSVC32']
+    else:
+      compiler.defines += ['COMPILER_GCC']
+
+    return binary
+
+  def HL2Library(self, context, name, sdk):
+    binary = context.compiler.Library(name)
+    self.ConfigureForExtension(context, binary.compiler)
+    return self.ConfigureForHL2(binary, sdk)
+	
+  def HL2Project(self, context, name):
+    project = context.compiler.LibraryProject(name)
+    self.ConfigureForExtension(context, project.compiler)
+    return project
+
+  def HL2Config(self, project, name, sdk):
+    binary = project.Configure(name, '{0} - {1}'.format(self.tag, sdk.name))
+    return self.ConfigureForHL2(binary, sdk)
+
+SteamWorks = SteamWorksConfig()
+SteamWorks.detectSDKs()
+SteamWorks.configure()
+
+BuildScripts = ['Extension/AMBuilder']
+
+builder.RunBuildScripts(BuildScripts, { 'SteamWorks': SteamWorks })

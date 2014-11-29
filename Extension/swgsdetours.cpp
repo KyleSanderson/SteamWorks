@@ -60,7 +60,11 @@ SteamWorksGSDetours::SteamWorksGSDetours()
 		pConfig = g_SteamWorks.pSWGameData->GetGameData();
 		if (pConfig)
 		{
-			pLibSteamPath = pConfig->GetKeyValue("LibSteamAPI");
+			const char *kvLibSteamAPI = pConfig->GetKeyValue("LibSteamAPI");
+			if (kvLibSteamAPI)
+			{
+				pLibSteamPath = kvLibSteamAPI;
+			}
 		}
 	}
 
