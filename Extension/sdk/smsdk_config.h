@@ -44,7 +44,7 @@
 #define SMEXT_CONF_AUTHOR		"Kyle Sanderson"
 #define SMEXT_CONF_URL			"http://AlliedMods.net"
 #define SMEXT_CONF_LOGTAG		"STEAMWORKS"
-#define SMEXT_CONF_LICENSE		"GPL"
+#define SMEXT_CONF_LICENSE		"GPLv3"
 #define SMEXT_CONF_DATESTRING	__DATE__
 
 /** 
