@@ -156,7 +156,7 @@ static cell_t sm_SetHTTPRequestContextValue(IPluginContext *pContext, const cell
 		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
-	return pHTTP->SetHTTPRequestContextValue(pRequest->request, (static_cast<uint64_t>(params[2]) << 32 | params[3])) ? 1 : 0;
+	return pHTTP->SetHTTPRequestContextValue(pRequest->request, (static_cast<uint64_t>(params[2]) << 32 | static_cast<uint32_t>(params[3]))) ? 1 : 0;
 }
 
 static cell_t sm_SetHTTPRequestNetworkActivityTimeout(IPluginContext *pContext, const cell_t *params)
