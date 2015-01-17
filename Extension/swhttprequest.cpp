@@ -31,6 +31,28 @@ static HandleType_t GetSteamHTTPHandle(void)
 	return g_SteamWorks.pSWHTTP->GetHTTPHandle();
 }
 
+static SteamWorksHTTPRequest *GetRequestPointer(ISteamHTTP *&pHTTP, IPluginContext *pContext, cell_t Handle)
+{
+	pHTTP = GetHTTPPointer();
+	if (pHTTP == NULL)
+	{
+		return NULL;
+	}
+
+	HandleError err;
+	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
+
+	SteamWorksHTTPRequest *pRequest;
+	if ((err = handlesys->ReadHandle(Handle, GetSteamHTTPHandle(), &sec, (void **)&pRequest))
+		!= HandleError_None)
+	{
+		pContext->ThrowNativeError("Invalid Handle %x (error: %d)", Handle, err);
+		return NULL;
+	}
+
+	return pRequest;
+}
+
 SteamWorksHTTPRequest::SteamWorksHTTPRequest()
 {
 	this->request = INVALID_HTTPREQUEST_HANDLE;
@@ -140,20 +162,11 @@ static cell_t sm_CreateHTTPRequest(IPluginContext *pContext, const cell_t *param
 
 static cell_t sm_SetHTTPRequestContextValue(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-	
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	return pHTTP->SetHTTPRequestContextValue(pRequest->request, (static_cast<uint64_t>(params[2]) << 32 | static_cast<uint32_t>(params[3]))) ? 1 : 0;
@@ -161,20 +174,11 @@ static cell_t sm_SetHTTPRequestContextValue(IPluginContext *pContext, const cell
 
 static cell_t sm_SetHTTPRequestNetworkActivityTimeout(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	return pHTTP->SetHTTPRequestNetworkActivityTimeout(pRequest->request, params[2]) ? 1 : 0;
@@ -182,20 +186,11 @@ static cell_t sm_SetHTTPRequestNetworkActivityTimeout(IPluginContext *pContext, 
 
 static cell_t sm_SetHTTPRequestHeaderValue(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	char *pName, *pValue;
@@ -206,20 +201,11 @@ static cell_t sm_SetHTTPRequestHeaderValue(IPluginContext *pContext, const cell_
 
 static cell_t sm_SetHTTPRequestGetOrPostParameter(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	char *pName, *pValue;
@@ -230,20 +216,11 @@ static cell_t sm_SetHTTPRequestGetOrPostParameter(IPluginContext *pContext, cons
 
 static cell_t sm_SetCallbacks(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	IPlugin *pPlugin;
@@ -251,6 +228,7 @@ static cell_t sm_SetCallbacks(IPluginContext *pContext, const cell_t *params)
 	{
 		pPlugin = plsys->FindPluginByContext(pContext->GetContext());
 	} else {
+		HandleError err;
 		pPlugin = plsys->PluginFromHandle(params[5], &err);
 
 		if (!pPlugin)
@@ -315,20 +293,11 @@ static cell_t sm_SetCallbacks(IPluginContext *pContext, const cell_t *params)
 
 static cell_t sm_SendHTTPRequest(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	SteamAPICall_t hCall;
@@ -357,20 +326,11 @@ static cell_t sm_SendHTTPRequest(IPluginContext *pContext, const cell_t *params)
 
 static cell_t sm_DeferHTTPRequest(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	return pHTTP->DeferHTTPRequest(pRequest->request) ? 1 : 0;
@@ -378,20 +338,11 @@ static cell_t sm_DeferHTTPRequest(IPluginContext *pContext, const cell_t *params
 
 static cell_t sm_PrioritizeHTTPRequest(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	return pHTTP->PrioritizeHTTPRequest(pRequest->request) ? 1 : 0;
@@ -399,20 +350,11 @@ static cell_t sm_PrioritizeHTTPRequest(IPluginContext *pContext, const cell_t *p
 
 static cell_t sm_GetHTTPResponseHeaderSize(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	char *pName;
@@ -425,20 +367,11 @@ static cell_t sm_GetHTTPResponseHeaderSize(IPluginContext *pContext, const cell_
 
 static cell_t sm_GetHTTPResponseHeaderValue(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	char *pName;
@@ -451,20 +384,11 @@ static cell_t sm_GetHTTPResponseHeaderValue(IPluginContext *pContext, const cell
 
 static cell_t sm_GetHTTPResponseBodySize(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	cell_t *pSize;
@@ -474,20 +398,11 @@ static cell_t sm_GetHTTPResponseBodySize(IPluginContext *pContext, const cell_t 
 
 static cell_t sm_GetHTTPResponseBodyData(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	char *pBuffer;
@@ -497,20 +412,11 @@ static cell_t sm_GetHTTPResponseBodyData(IPluginContext *pContext, const cell_t 
 
 static cell_t sm_GetHTTPDownloadProgressPct(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	float percent;
@@ -524,20 +430,11 @@ static cell_t sm_GetHTTPDownloadProgressPct(IPluginContext *pContext, const cell
 
 static cell_t sm_SetHTTPRequestRawPostBody(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	char *pName, *pBuffer;
@@ -549,20 +446,11 @@ static cell_t sm_SetHTTPRequestRawPostBody(IPluginContext *pContext, const cell_
 
 static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	IPlugin *pPlugin;
@@ -570,6 +458,7 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 	{
 		pPlugin = plsys->FindPluginByContext(pContext->GetContext());
 	} else {
+		HandleError err;
 		pPlugin = plsys->PluginFromHandle(params[4], &err);
 
 		if (!pPlugin)
@@ -610,20 +499,11 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 
 static cell_t sm_WriteHTTPResponseBodyToFile(IPluginContext *pContext, const cell_t *params)
 {
-	ISteamHTTP *pHTTP = GetHTTPPointer();
-	if (pHTTP == NULL)
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
 	{
 		return 0;
-	}
-
-	HandleError err;
-	HandleSecurity sec(pContext->GetIdentity(), myself->GetIdentity());
-
-	SteamWorksHTTPRequest *pRequest;
-	if ((err = handlesys->ReadHandle(params[1], GetSteamHTTPHandle(), &sec, (void **)&pRequest))
-		!= HandleError_None)
-	{
-		return pContext->ThrowNativeError("Invalid Handle %x (error: %d)", params[1], err);
 	}
 
 	uint32_t size;
