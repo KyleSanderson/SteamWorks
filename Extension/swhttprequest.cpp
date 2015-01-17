@@ -53,13 +53,8 @@ static SteamWorksHTTPRequest *GetRequestPointer(ISteamHTTP *&pHTTP, IPluginConte
 	return pRequest;
 }
 
-SteamWorksHTTPRequest::SteamWorksHTTPRequest()
+SteamWorksHTTPRequest::SteamWorksHTTPRequest() : request(INVALID_HTTPREQUEST_HANDLE), handle(BAD_HANDLE), pCompletedForward(NULL), pHeadersReceivedForward(NULL), pDataReceivedForward(NULL)
 {
-	this->request = INVALID_HTTPREQUEST_HANDLE;
-	this->handle = BAD_HANDLE;
-	this->pCompletedForward = NULL;
-	this->pHeadersReceivedForward = NULL;
-	this->pDataReceivedForward = NULL;
 };
 
 SteamWorksHTTPRequest::~SteamWorksHTTPRequest()
