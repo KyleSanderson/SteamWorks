@@ -286,18 +286,8 @@ static cell_t sm_SetCallbacks(IPluginContext *pContext, const cell_t *params)
 	return 1;
 }
 
-static cell_t sm_SendHTTPRequest(IPluginContext *pContext, const cell_t *params)
+static void SetCallbacks(SteamAPICall_t &hCall, SteamWorksHTTPRequest *pRequest)
 {
-	ISteamHTTP *pHTTP;
-	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
-	if (pRequest == NULL)
-	{
-		return 0;
-	}
-
-	SteamAPICall_t hCall;
-	cell_t result = pHTTP->SendHTTPRequest(pRequest->request, &hCall) ? 1 : 0;
-
 	if (pRequest->pCompletedForward != NULL)
 	{
 		pRequest->CompletedCallResult.SetGameserverFlag();
@@ -315,7 +305,37 @@ static cell_t sm_SendHTTPRequest(IPluginContext *pContext, const cell_t *params)
 		pRequest->DataCallResult.SetGameserverFlag();
 		pRequest->DataCallResult.Set(hCall, pRequest, &SteamWorksHTTPRequest::OnHTTPDataReceived);
 	}
+}
 
+static cell_t sm_SendHTTPRequestAndStreamResponse(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
+	{
+		return 0;
+	}
+
+	SteamAPICall_t hCall;
+	cell_t result = pHTTP->SendHTTPRequestAndStreamResponse(pRequest->request, &hCall) ? 1 : 0;
+
+	SetCallbacks(hCall, pRequest);
+	return result;
+}
+
+static cell_t sm_SendHTTPRequest(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
+	{
+		return 0;
+	}
+
+	SteamAPICall_t hCall;
+	cell_t result = pHTTP->SendHTTPRequest(pRequest->request, &hCall) ? 1 : 0;
+
+	SetCallbacks(hCall, pRequest);
 	return result;
 }
 
@@ -537,6 +557,20 @@ static cell_t sm_WriteHTTPResponseBodyToFile(IPluginContext *pContext, const cel
 	return 1;
 }
 
+static cell_t sm_GetHTTPStreamingResponseBodyData(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
+	{
+		return 0;
+	}
+
+	char *pBuffer;
+	pContext->LocalToString(params[3], &pBuffer);
+	return pHTTP->GetHTTPStreamingResponseBodyData(pRequest->request, params[2], reinterpret_cast<uint8_t *>(pBuffer), params[4]) ? 1 : 0;
+}
+
 static sp_nativeinfo_t httpnatives[] = {
 	{"SteamWorks_CreateHTTPRequest",				sm_CreateHTTPRequest},
 	{"SteamWorks_SetHTTPRequestContextValue",				sm_SetHTTPRequestContextValue},
@@ -555,6 +589,8 @@ static sp_nativeinfo_t httpnatives[] = {
 	{"SteamWorks_SetHTTPRequestRawPostBody",				sm_SetHTTPRequestRawPostBody},
 	{"SteamWorks_GetHTTPResponseBodyCallback",				sm_GetHTTPResponseBodyCallback},
 	{"SteamWorks_WriteHTTPResponseBodyToFile",				sm_WriteHTTPResponseBodyToFile},
+	{"SteamWorks_SendHTTPRequestAndStreamResponse",			sm_SendHTTPRequestAndStreamResponse},
+	{"SteamWorks_GetHTTPStreamingResponseBodyData",			sm_GetHTTPStreamingResponseBodyData},
 	{NULL,											NULL}
 };
 
