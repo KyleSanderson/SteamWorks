@@ -75,7 +75,7 @@ public:
 
 public:
 	template <class T>
-	inline T Read(bool *bError = NULL)
+	T Read(bool *bError = NULL)
 	{
 		if ((m_iCurrentOffset + sizeof(T)) > m_iSize)
 		{
@@ -94,7 +94,7 @@ public:
 	}
 
 	template <class T>
-	inline bool Read(T *pOut)
+	bool Read(T *pOut)
 	{
 		if ((m_iCurrentOffset + sizeof(T)) > m_iSize)
 			return false;
@@ -107,7 +107,7 @@ public:
 	}
 	
 	template <class T>
-	inline bool Read(T &Out)
+	bool Read(T &Out)
 	{
 		if ((m_iCurrentOffset + sizeof(T)) > m_iSize)
 			return false;
@@ -119,7 +119,7 @@ public:
 		return true;
 	}
 
-	inline bool Read(void *pOut, size_t iLength)
+	bool Read(void *pOut, size_t iLength)
 	{
 		if ((m_iCurrentOffset + iLength) > m_iSize)
 			return false;
