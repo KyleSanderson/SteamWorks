@@ -82,21 +82,21 @@ CDetour::CDetour(void *callbackfunction, void **trampoline, const char *signame)
 	detour_address = NULL;
 	detour_trampoline = NULL;
 	this->signame = signame;
-	this->address = address;
+	this->address = NULL;
 	this->detour_callback = callbackfunction;
 	spengine = NULL;
 	gameconf = NULL;
 	this->trampoline = trampoline;
 }
 
-CDetour::CDetour(void *callbackfunction, void **trampoline, void *address)
+CDetour::CDetour(void *callbackfunction, void **trampoline, void *pAddress)
 {
 	enabled = false;
 	detoured = false;
 	detour_address = NULL;
 	detour_trampoline = NULL;
 	this->signame = NULL;
-	this->address = address;
+	this->address = pAddress;
 	this->detour_callback = callbackfunction;
 	spengine = NULL;
 	gameconf = NULL;
