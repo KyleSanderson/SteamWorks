@@ -31,5 +31,8 @@ for sdk_name in SteamWorks.sdks:
 	
   if builder.target_platform == 'windows':
     binary.compiler.postlink += os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'steam_api.lib'),;
+	
+  if builder.target_platform == 'mac':
+    binary.compiler.postlink += os.path.join(SteamWorks.steamworks_root, 'redistributable_bin', 'osx32', 'libsteam_api.dylib'),;
 
 SteamWorks.extensions += builder.Add(project)
