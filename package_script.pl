@@ -4,6 +4,8 @@
 use strict;
 use Cwd;
 use File::Basename;
+use File::Copy;
+use File::Path;
 use Net::FTP;
 
 my ($ftp_file, $ftp_host, $ftp_user, $ftp_pass, $ftp_path, $tag);
@@ -28,17 +30,24 @@ chdir($path);
 
 require 'helpers.pm';
 
-my ($version);
+my ($version, $ext);
 $version .= '-git' . Build::GitRevNum('.');
 
 # Append OS to package version
 if ($^O eq "darwin")
 {
+    $ext = ".dylib";
     $version .= '-mac';
 }
 elsif ($^O =~ /MSWin/)
 {
+    $ext = ".dll";
     $version .= '-windows';
+}
+elsif ($^O eq "linux")
+{
+    $ext = ".so";
+    $version .= '-linux';
 }
 else
 {
@@ -46,14 +55,18 @@ else
 }
 
 #Switch to the output folder.
-chdir(Build::PathFormat('../../OUTPUT/package'));
+# chdir(Build::PathFormat('../../OUTPUT/package'));
 
 my ($dirlist, $filename, $cmd);
 $dirlist = "addons";
-$filename = 'SteamWorks-' . $version;
+$filename = 'SteamWorks' . $version;
+
+mkpath("addons/sourcemod/extensions");
+copy("build/Extension/SteamWorks.ext/SteamWorks.ext" . $ext, "addons/sourcemod/extensions/SteamWorks.ext" . $ext)  or die $!;
+
 if ($^O eq "linux")
 {
-    $filename .= '.tgz';
+    $filename .= '.tar.gz';
 	$cmd = "tar zcvf $filename $dirlist";
 }
 else
@@ -69,7 +82,7 @@ $ftp_path .= "/SteamWorks";
 
 my ($ftp);
 
-$ftp = Net::FTP->new($ftp_host, Debug => 0, Passive => 0) 
+$ftp = Net::FTP->new($ftp_host, Debug => 0, Passive => 1) 
     or die "Cannot connect to host $ftp_host: $@";
 
 $ftp->login($ftp_user, $ftp_pass)
