@@ -55,10 +55,10 @@ else
 }
 
 #Switch to the output folder.
-chdir(Build::PathFormat('../../../OUTPUT/package'));
+chdir(Build::PathFormat('../build/package'));
 
 my ($dirlist, $filename, $cmd);
-$dirlist = "../addons";
+$dirlist = "addons";
 $filename = 'SteamWorks' . $version;
 
 if ($^O eq "linux")
