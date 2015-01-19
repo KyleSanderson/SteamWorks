@@ -314,3 +314,4 @@ SteamWorks.configure()
 BuildScripts = ['Extension/AMBuilder']
 
 builder.RunBuildScripts(BuildScripts, { 'SteamWorks': SteamWorks })
+builder.RunScript('buildbot/PackageScript', { 'SteamWorks': SteamWorks })

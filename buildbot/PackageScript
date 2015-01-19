@@ -1,0 +1,31 @@
+# vim: set ts=8 sts=2 sw=2 tw=99 et ft=python: 
+import os
+
+builder.SetBuildFolder('package')
+
+folder_list = [
+  'addons/sourcemod/extensions',
+  'addons/sourcemod/scripting',
+  'addons/sourcemod/scripting/include',
+]
+
+# Create the distribution folder hierarchy.
+folder_map = {}
+for folder in folder_list:
+  norm_folder = os.path.normpath(folder)
+  folder_map[folder] = builder.AddFolder(norm_folder)
+
+for extension in SteamWorks.extensions:
+  builder.AddCopy(extension.binary, folder_map['addons/sourcemod/extensions'])
+
+# Do all straight-up file copies from the source tree.
+def CopyFiles(src, dest, files):
+  if not dest:
+    dest = src
+  dest_entry = folder_map[dest]
+  for source_file in files:
+    source_path = os.path.join(builder.sourcePath, src, source_file)
+    builder.AddCopy(source_path, dest_entry)
+
+CopyFiles('Pawn', 'addons/sourcemod/scripting', ['swag.sp'])
+CopyFiles('Pawn/includes', 'addons/sourcemod/scripting/include', ['SteamWorks.inc'])

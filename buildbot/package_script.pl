@@ -55,14 +55,11 @@ else
 }
 
 #Switch to the output folder.
-# chdir(Build::PathFormat('../../OUTPUT/package'));
+chdir(Build::PathFormat('../../../OUTPUT/package'));
 
 my ($dirlist, $filename, $cmd);
-$dirlist = "addons";
+$dirlist = "../addons";
 $filename = 'SteamWorks' . $version;
-
-mkpath("addons/sourcemod/extensions");
-copy("build/Extension/SteamWorks.ext/SteamWorks.ext" . $ext, "addons/sourcemod/extensions/SteamWorks.ext" . $ext)  or die $!;
 
 if ($^O eq "linux")
 {
