@@ -279,6 +279,8 @@ public __ext_SteamWorks_SetNTVOptional()
 	MarkNativeAsOptional("SteamWorks_SetRule");
 	MarkNativeAsOptional("SteamWorks_ClearRules");
 	MarkNativeAsOptional("SteamWorks_ForceHeartbeat");
+	MarkNativeAsOptional("SteamWorks_GetUserGroupStatus");
+	MarkNativeAsOptional("SteamWorks_GetUserGroupStatusAuthID");
 
 	MarkNativeAsOptional("SteamWorks_HasLicenseForApp");
 	MarkNativeAsOptional("SteamWorks_GetClientSteamID");

@@ -38,6 +38,7 @@ class SteamWorksForwards
 		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnSteamServersConnected, SteamServersConnected_t, m_CallbackSteamConnected);
 		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnSteamServersConnectFailure, SteamServerConnectFailure_t, m_CallbackSteamConnectFailure);
 		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnSteamServersDisconnected, SteamServersDisconnected_t, m_CallbackSteamDisconnected);
+		STEAM_GAMESERVER_CALLBACK(SteamWorksForwards, OnGroupStatusResult, GSClientGroupStatus_t, m_CallbackGroupStatus);
 	
 	private:
 		IForward *pFOVC;	/* Forward On Validate Client */
@@ -45,4 +46,5 @@ class SteamWorksForwards
 		IForward *pFOSSC;	/* Forward On Steam Servers Connected */
 		IForward *pFOSSCF;	/* Forward On Steam Servers Connect Failure */
 		IForward *pFOSSD;	/* Forward On Steam Servers Disconnected */
+		IForward *pFOCGS;	/* Forward On Client Group Status */
 };
