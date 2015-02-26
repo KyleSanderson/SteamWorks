@@ -109,9 +109,9 @@ void SteamWorksForwards::OnGroupStatusResult(GSClientGroupStatus_t *pResponse)
 		return;
 	}
 
-	this->pFOCGS->PushCell(pResonse->m_SteamIDUser.GetAccountID());
-	this->pFOCGS->PushCell(pResonse->m_SteamIDGroup.GetAccountID());
-	this->pFOCGS->PushCell(pResonse->m_bMember);
-	this->pFOCGS->PushCell(pResonse->m_bOfficer);
+	this->pFOCGS->PushCell(pResponse->m_SteamIDUser.GetAccountID());
+	this->pFOCGS->PushCell(pResponse->m_SteamIDGroup.GetAccountID());
+	this->pFOCGS->PushCell(pResponse->m_bMember);
+	this->pFOCGS->PushCell(pResponse->m_bOfficer);
 	this->pFOCGS->Execute(NULL);
 }
