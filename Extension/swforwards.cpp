@@ -41,6 +41,7 @@ SteamWorksForwards::~SteamWorksForwards()
 	forwards->ReleaseForward(this->pFOSSC);
 	forwards->ReleaseForward(this->pFOSSCF);
 	forwards->ReleaseForward(this->pFOSSD);
+	forwards->ReleaseForward(this->pFOCGS);
 }
 
 void SteamWorksForwards::NotifyPawnValidateClient(Account_t parent, Account_t child)
