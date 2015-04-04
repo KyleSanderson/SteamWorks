@@ -216,7 +216,7 @@ static cell_t sm_GetUserGroupStatus(IPluginContext *pContext, const cell_t *para
 		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
 	}
 
-	CSteamID checkid = CreateCommonCSteamID(pPlayer, params);
+	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 3, 4);
 	return pServer->RequestUserGroupStatus(checkid, CSteamID(params[2], k_EUniversePublic, k_EAccountTypeClan));
 }
 
