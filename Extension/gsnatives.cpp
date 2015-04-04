@@ -175,7 +175,7 @@ static cell_t sm_UserHasLicenseForApp(IPluginContext *pContext, const cell_t *pa
 		return pContext->ThrowNativeError("Client index %d is invalid", params[1]);
 	}
 	
-	CSteamID checkid = CreateCommonCSteamID(pPlayer, params);
+	CSteamID checkid = CreateCommonCSteamID(pPlayer, params, 3, 4);
 	return pServer->UserHasLicenseForApp(checkid, params[2]);
 }
 
