@@ -502,7 +502,7 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 	}
 
 	pBuffer[size] = '\0'; /* Incase users do something bad; we want to protect userspace; kind of. */
-	pFunction->PushStringEx(pBuffer, size, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
+	pFunction->PushStringEx(pBuffer, size + 1, SM_PARAM_STRING_BINARY | SM_PARAM_STRING_COPY, 0);
 	pFunction->PushCell(params[3]);
 	pFunction->PushCell(size);
 	pFunction->Execute(NULL);
