@@ -80,12 +80,20 @@ CSteamID SteamWorks::CreateCommonCSteamID(IGamePlayer *pPlayer, const cell_t *pa
 	EAccountType type = k_EAccountTypeIndividual;
 	
 	const char *pAuth = pPlayer->GetAuthString(false); /* We're not using this for Auth. */
-	if (pAuth == NULL || pAuth[0] == '\0' || pAuth[0] == '[' || strlen(pAuth) < 11 || pAuth[6] == 'I')
+	if (pAuth == NULL || pAuth[0] == '\0' || strlen(pAuth) < 7 || pAuth[6] == 'I')
 	{
 		return this->CreateCommonCSteamID(pPlayer->GetSteamAccountID(false), params, universeplace, typeplace);
 	}
 
-	universe = static_cast<EUniverse>(atoi(&pAuth[6]));
+	if (pAuth[0] == '[')
+	{
+		universe = static_cast<EUniverse>(atoi(&pAuth[3]));
+	}
+	else
+	{
+		universe = static_cast<EUniverse>(atoi(&pAuth[6]));
+	}
+
 	if (universe == k_EUniverseInvalid)
 	{
 		universe = k_EUniversePublic; /* Legacy Engine shim. */
