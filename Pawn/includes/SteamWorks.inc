@@ -198,6 +198,7 @@ native bool:SteamWorks_GetUserGroupStatus(client, groupid);
 native bool:SteamWorks_GetUserGroupStatusAuthID(authid, groupid);
 
 native EUserHasLicenseForAppResult:SteamWorks_HasLicenseForApp(client, app);
+native EUserHasLicenseForAppResult:SteamWorks_HasLicenseForAppId(authid, app);
 native SteamWorks_GetClientSteamID(client, String:sSteamID[], length);
 
 native bool:SteamWorks_RequestStatsAuthID(authid, appid);
@@ -304,6 +305,7 @@ public __ext_SteamWorks_SetNTVOptional()
 	MarkNativeAsOptional("SteamWorks_GetUserGroupStatusAuthID");
 
 	MarkNativeAsOptional("SteamWorks_HasLicenseForApp");
+	MarkNativeAsOptional("SteamWorks_HasLicenseForAppId");
 	MarkNativeAsOptional("SteamWorks_GetClientSteamID");
 
 	MarkNativeAsOptional("SteamWorks_RequestStatsAuthID");

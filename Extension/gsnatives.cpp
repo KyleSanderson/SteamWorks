@@ -179,6 +179,19 @@ static cell_t sm_UserHasLicenseForApp(IPluginContext *pContext, const cell_t *pa
 	return pServer->UserHasLicenseForApp(checkid, params[2]);
 }
 
+static cell_t sm_UserHasLicenseForAppId(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamGameServer *pServer = GetGSPointer();
+
+	if (pServer == NULL)
+	{
+		return k_EUserHasLicenseResultNoAuth;
+	}
+
+	CSteamID checkid = CreateCommonCSteamID(params[1], params, 3, 4);
+	return pServer->UserHasLicenseForApp(checkid, params[2]);
+}
+
 static cell_t sm_GetClientSteamID(IPluginContext *pContext, const cell_t *params)
 {
 	int client = gamehelpers->ReferenceToIndex(params[1]);
@@ -244,6 +257,7 @@ static sp_nativeinfo_t gsnatives[] = {
 	{"SteamWorks_ClearRules",						sm_ClearRules},
 	{"SteamWorks_ForceHeartbeat",				sm_ForceHeartbeat},
 	{"SteamWorks_HasLicenseForApp",			sm_UserHasLicenseForApp},
+	{"SteamWorks_HasLicenseForAppId",			sm_UserHasLicenseForAppId},
 	{"SteamWorks_GetClientSteamID",			sm_GetClientSteamID},
 	{"SteamWorks_GetUserGroupStatus",			sm_GetUserGroupStatus},
 	{"SteamWorks_GetUserGroupStatusAuthID",			sm_GetUserGroupStatusAuthID},
