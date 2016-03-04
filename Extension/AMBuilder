@@ -13,6 +13,7 @@ project.sources += [
   'ssnatives.cpp',
   'swhttp.cpp',
   'swhttprequest.cpp',
+  'swgchooks.cpp',
   'sdk/smsdk_ext.cpp',
   'CDetour/detours.cpp',
   'asm/asm.c'

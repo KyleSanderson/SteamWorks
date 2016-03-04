@@ -17,40 +17,34 @@
 */
 
 #pragma once
-#include "smsdk_ext.h"
 #include "steam_gameserver.h"
 #include "isteamgamecoordinator.h"
 
-class SteamWorksGameServer
+#include "smsdk_ext.h"
+#include "sourcehook.h"
+
+class SteamWorksGCHooks
 {
 	public:
-		SteamWorksGameServer();
-		~SteamWorksGameServer();
+		SteamWorksGCHooks();
+		~SteamWorksGCHooks();
 
 	public:
-		ISteamClient *GetSteamClient(void);
-		ISteamGameServer *GetGameServer(void);
-		ISteamUtils *GetUtils(void);
-		ISteamNetworking *GetNetworking(void);
-		ISteamGameServerStats *GetServerStats(void);
-		ISteamHTTP *GetHTTP(void);
-		ISteamMatchmaking *GetMatchmaking(void);
-		ISteamGameCoordinator *GetGameCoordinator(void);
+		void AddHooks(ISteamGameCoordinator *pGC);
+		void RemoveHooks(ISteamGameCoordinator *pGC, bool destroyed = false);
 
 	public:
-		void Reset(void);
+		EGCResults SendMessage(uint32 unMsgType, const void *pubData, uint32 cubData);
+		bool IsMessageAvailable(uint32_t *pcubMsgSize);
+		EGCResults RetrieveMessage(uint32 *punMsgType, void *pubDest, uint32 cubDest, uint32 *pcubMsgSize);
+
 	private:
-		void GetUserAndPipe(HSteamUser &hSteamUser, HSteamPipe &hSteamPipe);
-	private:
-		ISteamClient *m_pClient;
-		ISteamGameServer *m_pGameServer;
-		ISteamUtils *m_pUtils;
-		ISteamNetworking *m_pNetworking;
-		ISteamGameServerStats *m_pStats;
-		ISteamHTTP *m_pHTTP;
-		ISteamMatchmaking *m_pMatchmaking;
-		ISteamGameCoordinator *m_pGC;
-		bool loaded;
+		IForward *pGCSendMsg;
+		IForward *pGCMsgAvail;
+		IForward *pGCRetMsg;
+		unsigned char uHooked;
 };
+
+void OurGCGameFrameHook(bool simulating);
 
 #include "extension.h"

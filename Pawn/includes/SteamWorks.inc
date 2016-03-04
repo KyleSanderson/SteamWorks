@@ -175,6 +175,16 @@ enum EHTTPStatusCode
 	k_EHTTPStatusCode5xxUnknown =				599,
 };
 
+/* list of possible return values from the ISteamGameCoordinator API */
+enum EGCResults
+{
+	k_EGCResultOK = 0,
+	k_EGCResultNoMessage = 1,			// There is no message in the queue
+	k_EGCResultBufferTooSmall = 2,		// The buffer is too small for the requested message
+	k_EGCResultNotLoggedOn = 3,			// The client is not logged onto Steam
+	k_EGCResultInvalidMessage = 4,		// Something was wrong with the message being sent with SendMessage
+};
+
 native bool:SteamWorks_IsVACEnabled();
 native bool:SteamWorks_GetPublicIP(ipaddr[4]);
 native SteamWorks_GetPublicIPCell();
@@ -257,6 +267,10 @@ forward Action:SteamWorks_RestartRequested();
 forward SteamWorks_TokenRequested(String:sToken[], maxlen);
 
 forward SteamWorks_OnClientGroupStatus(authid, groupid, bool:isMember, bool:isOfficer);
+
+forward EGCResults:SteamWorks_GCSendMessage(unMsgType, const String:pubData[], cubData);
+forward SteamWorks_GCMsgAvailable(cubData);
+forward EGCResults:SteamWorks_RetreiveMessage(punMsgType, const String:pubDest[], cubDest, pcubMsgSize);
 
 public Extension:__ext_SteamWorks = 
 {
