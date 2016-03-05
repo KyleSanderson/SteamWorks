@@ -23,6 +23,10 @@
 #include "smsdk_ext.h"
 #include "sourcehook.h"
 
+#ifdef _WIN32
+#undef SendMessage
+#endif
+
 class SteamWorksGCHooks
 {
 	public:
