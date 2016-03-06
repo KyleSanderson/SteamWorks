@@ -297,7 +297,7 @@ forward SteamWorks_OnClientGroupStatus(authid, groupid, bool:isMember, bool:isOf
 
 forward EGCResults:SteamWorks_GCSendMessage(unMsgType, const String:pubData[], cubData);
 forward SteamWorks_GCMsgAvailable(cubData);
-forward EGCResults:SteamWorks_GCRetreiveMessage(punMsgType, const String:pubDest[], cubDest, pcubMsgSize);
+forward EGCResults:SteamWorks_GCRetrieveMessage(punMsgType, const String:pubDest[], cubDest, pcubMsgSize);
 
 native EGCResults:SteamWorks_SendMessageToGC(unMsgType, const String:pubData[], cubData);
 
