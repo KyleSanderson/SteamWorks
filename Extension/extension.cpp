@@ -56,11 +56,13 @@ bool SteamWorks::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	this->pGSDetours = new SteamWorksGSDetours;
 	this->pSSNatives = new SteamWorksSSNatives;
 	this->pGCHooks = new SteamWorksGCHooks;
+	this->pGCNatives = new SteamWorksGCNatives;
 	return true;
 }
 
 void SteamWorks::SDK_OnUnload()
 {
+	delete this->pGCNatives;
 	delete this->pGCHooks;
 	delete this->pSSNatives;
 	delete this->pGSDetours;

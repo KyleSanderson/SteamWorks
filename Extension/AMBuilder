@@ -11,6 +11,7 @@ project.sources += [
   'swgshooks.cpp',
   'swgsdetours.cpp',
   'ssnatives.cpp',
+  'gcnatives.cpp',
   'swhttp.cpp',
   'swhttprequest.cpp',
   'swgchooks.cpp',

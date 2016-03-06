@@ -49,6 +49,7 @@
 #include "swgshooks.h"
 #include "swgchooks.h"
 #include "ssnatives.h"
+#include "gcnatives.h"
 #include "swgsdetours.h"
 #include "swhttp.h"
 
@@ -144,6 +145,7 @@ public:
 	SteamWorksHTTP *pSWHTTP;
 	SteamWorksHTTPNatives *pSWHTTPNatives;
 	SteamWorksGCHooks *pGCHooks;
+	SteamWorksGCNatives *pGCNatives;
 };
 
 extern SteamWorks g_SteamWorks;

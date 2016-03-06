@@ -299,6 +299,8 @@ forward EGCResults:SteamWorks_GCSendMessage(unMsgType, const String:pubData[], c
 forward SteamWorks_GCMsgAvailable(cubData);
 forward EGCResults:SteamWorks_GCRetreiveMessage(punMsgType, const String:pubDest[], cubDest, pcubMsgSize);
 
+native EGCResults:SteamWorks_SendMessageToGC(unMsgType, const String:pubData[], cubData);
+
 public Extension:__ext_SteamWorks = 
 {
 	name = "SteamWorks",
