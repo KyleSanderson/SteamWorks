@@ -82,14 +82,14 @@ ISteamClient *SteamWorksGameServer::GetSteamClient(void)
 
 			if (pGSInternalCreateAddress == NULL)
 			{
-				pGSInternalCreateAddress = static_cast<void *(*)(const char *)>(pLibrary->GetSymbolAddress(pGSInternalFuncName));
+				pGSInternalCreateAddress = reinterpret_cast<void *(*)(const char *)>(pLibrary->GetSymbolAddress(pGSInternalFuncName));
 			}
 
 			pLibrary->CloseLibrary();
 		}
 
 		if (pGSInternalCreateAddress != NULL)
-			pSteamClient = (*pGSInternalCreateAddress)(STEAMCLIENT_INTERFACE_VERSION);
+			pSteamClient = static_cast<ISteamClient *>((*pGSInternalCreateAddress)(STEAMCLIENT_INTERFACE_VERSION));
 	}
 
 	return pSteamClient;
