@@ -47,24 +47,12 @@ DETOUR_DECL_STATIC6(SteamGameServer_InitSafeDetour, bool, uint32, unIP, uint16, 
 
 SteamWorksGSDetours::SteamWorksGSDetours()
 {
-#if defined POSIX
-	const char *pLibSteamPath = "./bin/libsteam_api.so";
-#elif defined WIN32_LEAN_AND_MEAN
-	const char *pLibSteamPath = "./bin/steam_api.dll"; /* Naming from SteamTools. */
-#endif
+	const char *pLibSteamPath = g_SteamWorks.pSWGameServer->GetLibraryPath();
 
 	IGameConfig *pConfig = NULL;
 	if (g_SteamWorks.pSWGameData)
 	{
 		pConfig = g_SteamWorks.pSWGameData->GetGameData();
-		if (pConfig)
-		{
-			const char *kvLibSteamAPI = pConfig->GetKeyValue("LibSteamAPI");
-			if (kvLibSteamAPI)
-			{
-				pLibSteamPath = kvLibSteamAPI;
-			}
-		}
 	}
 
 	ILibrary *pLibrary = libsys->OpenLibrary(pLibSteamPath, NULL, 0);

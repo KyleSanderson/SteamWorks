@@ -60,7 +60,39 @@ void SteamWorksGameServer::Reset(void)
 
 ISteamClient *SteamWorksGameServer::GetSteamClient(void)
 {
-	return g_pSteamClientGameServer;
+	if (g_pSteamClientGameServer != NULL)
+		return g_pSteamClientGameServer;
+
+	/*
+		The following is assumed from an unreleased version of the SteamWorks SDK, first seen (and reversed) in CS:GO.
+		Thanks CS:GO team! @:|
+	*/
+
+	static ISteamClient *pSteamClient = NULL;
+	if (pSteamClient == NULL)
+	{
+		const char *pLibSteamPath = g_SteamWorks.pSWGameServer->GetLibraryPath();
+
+		ILibrary *pLibrary = libsys->OpenLibrary(pLibSteamPath, NULL, 0);
+		void *(*pGSInternalCreateAddress)(const char *) = NULL;
+
+		if (pLibrary != NULL)
+		{
+			const char *pGSInternalFuncName = "SteamGameServerInternal_CreateInterface";
+
+			if (pGSInternalCreateAddress == NULL)
+			{
+				pGSInternalCreateAddress = static_cast<void *(*)(const char *)>(pLibrary->GetSymbolAddress(pGSInternalFuncName));
+			}
+
+			pLibrary->CloseLibrary();
+		}
+
+		if (pGSInternalCreateAddress != NULL)
+			pSteamClient = (*pGSInternalCreateAddress)(STEAMCLIENT_INTERFACE_VERSION);
+	}
+
+	return pSteamClient;
 }
 
 ISteamGameServer *SteamWorksGameServer::GetGameServer(void)
@@ -177,4 +209,34 @@ void SteamWorksGameServer::GetUserAndPipe(HSteamUser &hSteamUser, HSteamPipe &hS
 {
 	hSteamUser = SteamGameServer_GetHSteamUser();
 	hSteamPipe = SteamGameServer_GetHSteamPipe();
+}
+
+const char *SteamWorksGameServer::GetLibraryPath(void)
+{
+	static const char *pLibSteamPath = NULL;
+
+	if (pLibSteamPath == NULL)
+	{
+#if defined POSIX
+		pLibSteamPath = "./bin/libsteam_api.so";
+#elif defined WIN32_LEAN_AND_MEAN
+		pLibSteamPath = "./bin/steam_api.dll"; /* Naming from SteamTools. */
+#endif
+
+		IGameConfig *pConfig = NULL;
+		if (g_SteamWorks.pSWGameData)
+		{
+			pConfig = g_SteamWorks.pSWGameData->GetGameData();
+			if (pConfig)
+			{
+				const char *kvLibSteamAPI = pConfig->GetKeyValue("LibSteamAPI");
+				if (kvLibSteamAPI)
+				{
+					pLibSteamPath = kvLibSteamAPI;
+				}
+			}
+		}
+	}
+
+	return pLibSteamPath;
 }

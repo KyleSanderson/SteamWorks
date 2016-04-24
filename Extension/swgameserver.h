@@ -39,6 +39,7 @@ class SteamWorksGameServer
 
 	public:
 		void Reset(void);
+		const char *GetLibraryPath(void);
 	private:
 		void GetUserAndPipe(HSteamUser &hSteamUser, HSteamPipe &hSteamPipe);
 	private:
