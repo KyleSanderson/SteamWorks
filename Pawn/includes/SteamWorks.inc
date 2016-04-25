@@ -343,6 +343,8 @@ public __ext_SteamWorks_SetNTVOptional()
 	MarkNativeAsOptional("SteamWorks_GetStatFloat");
 	MarkNativeAsOptional("SteamWorks_GetStatAuthIDFloat");
 
+	MarkNativeAsOptional("SteamWorks_SendMessageToGC");
+
 	MarkNativeAsOptional("SteamWorks_CreateHTTPRequest");
 	MarkNativeAsOptional("SteamWorks_SetHTTPRequestContextValue");
 	MarkNativeAsOptional("SteamWorks_SetHTTPRequestNetworkActivityTimeout");
