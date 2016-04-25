@@ -49,6 +49,7 @@ SteamWorksGameServer::~SteamWorksGameServer()
 
 void SteamWorksGameServer::Reset(void)
 {
+	this->m_pClient = NULL;
 	this->m_pGameServer = NULL;
 	this->m_pUtils = NULL;
 	this->m_pNetworking = NULL;
@@ -68,18 +69,25 @@ ISteamClient *SteamWorksGameServer::GetSteamClient(void)
 		Thanks CS:GO team! @:|
 	*/
 
-	static ISteamClient *pSteamClient = NULL;
-	if (pSteamClient == NULL)
+	if (this->m_pClient == NULL)
 	{
 		const char *pLibSteamPath = g_SteamWorks.pSWGameServer->GetLibraryPath();
 
-		ILibrary *pLibrary = libsys->OpenLibrary(pLibSteamPath, NULL, 0);
 		void *(*pGSInternalCreateAddress)(const char *) = NULL;
+		const char *pGSInternalFuncName = "SteamGameServerInternal_CreateInterface";
 
+		if (g_SteamWorks.pSWGameData)
+		{
+			IGameConfig *pConfig = g_SteamWorks.pSWGameData->GetGameData();
+			if (pConfig != NULL)
+			{
+				pConfig->GetMemSig(pGSInternalFuncName, &pGSInternalCreateAddress);
+			}
+		}
+
+		ILibrary *pLibrary = libsys->OpenLibrary(pLibSteamPath, NULL, 0);
 		if (pLibrary != NULL)
 		{
-			const char *pGSInternalFuncName = "SteamGameServerInternal_CreateInterface";
-
 			if (pGSInternalCreateAddress == NULL)
 			{
 				pGSInternalCreateAddress = reinterpret_cast<void *(*)(const char *)>(pLibrary->GetSymbolAddress(pGSInternalFuncName));
@@ -89,10 +97,10 @@ ISteamClient *SteamWorksGameServer::GetSteamClient(void)
 		}
 
 		if (pGSInternalCreateAddress != NULL)
-			pSteamClient = static_cast<ISteamClient *>((*pGSInternalCreateAddress)(STEAMCLIENT_INTERFACE_VERSION));
+			this->m_pClient = static_cast<ISteamClient *>((*pGSInternalCreateAddress)(STEAMCLIENT_INTERFACE_VERSION));
 	}
 
-	return pSteamClient;
+	return this->m_pClient;
 }
 
 ISteamGameServer *SteamWorksGameServer::GetGameServer(void)
@@ -223,10 +231,9 @@ const char *SteamWorksGameServer::GetLibraryPath(void)
 		pLibSteamPath = "./bin/steam_api.dll"; /* Naming from SteamTools. */
 #endif
 
-		IGameConfig *pConfig = NULL;
 		if (g_SteamWorks.pSWGameData)
 		{
-			pConfig = g_SteamWorks.pSWGameData->GetGameData();
+			IGameConfig *pConfig = g_SteamWorks.pSWGameData->GetGameData();
 			if (pConfig)
 			{
 				const char *kvLibSteamAPI = pConfig->GetKeyValue("LibSteamAPI");

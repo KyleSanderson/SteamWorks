@@ -49,25 +49,26 @@ SteamWorksGSDetours::SteamWorksGSDetours()
 {
 	const char *pLibSteamPath = g_SteamWorks.pSWGameServer->GetLibraryPath();
 
+	void *pSteamSafeInitAddress = NULL;
+	void *pSteamShutdownAddress = NULL;
+
+	const char *pInitSafeFuncName = "SteamGameServer_InitSafe";
+	const char *pShutdownFuncName = "SteamGameServer_Shutdown";
+
 	IGameConfig *pConfig = NULL;
 	if (g_SteamWorks.pSWGameData)
 	{
 		pConfig = g_SteamWorks.pSWGameData->GetGameData();
-	}
-
-	ILibrary *pLibrary = libsys->OpenLibrary(pLibSteamPath, NULL, 0);
-	void *pSteamSafeInitAddress = NULL;
-	void *pSteamShutdownAddress = NULL;
-	if (pLibrary != NULL)
-	{
-		const char *pInitSafeFuncName = "SteamGameServer_InitSafe";
-		const char *pShutdownFuncName = "SteamGameServer_Shutdown";
 		if (pConfig != NULL)
 		{
 			pConfig->GetMemSig(pShutdownFuncName, &pSteamShutdownAddress);
 			pConfig->GetMemSig(pInitSafeFuncName, &pSteamSafeInitAddress);
 		}
-		
+	}
+
+	ILibrary *pLibrary = libsys->OpenLibrary(pLibSteamPath, NULL, 0);
+	if (pLibrary != NULL)
+	{
 		if (pSteamShutdownAddress == NULL)
 		{
 			pSteamShutdownAddress = pLibrary->GetSymbolAddress(pShutdownFuncName);
