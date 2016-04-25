@@ -81,7 +81,7 @@ ISteamClient *SteamWorksGameServer::GetSteamClient(void)
 			IGameConfig *pConfig = g_SteamWorks.pSWGameData->GetGameData();
 			if (pConfig != NULL)
 			{
-				pConfig->GetMemSig(pGSInternalFuncName, &pGSInternalCreateAddress);
+				pConfig->GetMemSig(pGSInternalFuncName, reinterpret_cast<void **>(&pGSInternalCreateAddress));
 			}
 		}
 
