@@ -74,7 +74,9 @@ ISteamClient *SteamWorksGameServer::GetSteamClient(void)
 		const char *pLibSteamPath = g_SteamWorks.pSWGameServer->GetLibraryPath();
 
 		void *(*pGSInternalCreateAddress)(const char *) = NULL;
+		void *(*pInternalCreateAddress)(const char *) = NULL;
 		const char *pGSInternalFuncName = "SteamGameServerInternal_CreateInterface";
+		const char *pInternalFuncName = "SteamInternal_CreateInterface";
 
 		if (g_SteamWorks.pSWGameData)
 		{
@@ -82,6 +84,7 @@ ISteamClient *SteamWorksGameServer::GetSteamClient(void)
 			if (pConfig != NULL)
 			{
 				pConfig->GetMemSig(pGSInternalFuncName, reinterpret_cast<void **>(&pGSInternalCreateAddress));
+				pConfig->GetMemSig(pInternalFuncName, reinterpret_cast<void **>(&pInternalCreateAddress));
 			}
 		}
 
@@ -93,11 +96,19 @@ ISteamClient *SteamWorksGameServer::GetSteamClient(void)
 				pGSInternalCreateAddress = reinterpret_cast<void *(*)(const char *)>(pLibrary->GetSymbolAddress(pGSInternalFuncName));
 			}
 
+			if (pInternalCreateAddress == NULL)
+			{
+				pInternalCreateAddress = reinterpret_cast<void *(*)(const char *)>(pLibrary->GetSymbolAddress(pInternalFuncName));
+			}
+
 			pLibrary->CloseLibrary();
 		}
 
 		if (pGSInternalCreateAddress != NULL)
 			this->m_pClient = static_cast<ISteamClient *>((*pGSInternalCreateAddress)(STEAMCLIENT_INTERFACE_VERSION));
+		
+		if (this->m_pClient == NULL && pInternalCreateAddress != NULL)
+			this->m_pClient = static_cast<ISteamClient *>((*pInternalCreateAddress)(STEAMCLIENT_INTERFACE_VERSION));
 	}
 
 	return this->m_pClient;
