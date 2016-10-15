@@ -95,6 +95,7 @@ bool SteamWorksGCHooks::IsMessageAvailable(uint32_t *pcubMsgSize)
 	uint32_t shill;
 	if (!pcubMsgSize)
 	{
+		shill = 0;
 		SH_CALL(GetSteamGCPointer(), &ISteamGameCoordinator::IsMessageAvailable)(&shill);
 		pcubMsgSize = &shill;
 	}
@@ -112,7 +113,7 @@ EGCResults SteamWorksGCHooks::RetrieveMessage(uint32 *punMsgType, void *pubDest,
 	}
 
 	/* Don't trust a bitch, except for 2GD. https://www.youtube.com/watch?v=MgePh_YJgrc */
-	cell_t Result;
+	cell_t Result = k_EGCResultOK;
 	EGCResults res = SH_CALL(GetSteamGCPointer(), &ISteamGameCoordinator::RetrieveMessage)(punMsgType, pubDest, cubDest, pcubMsgSize);
 	if (punMsgType)
 		this->pGCRetMsg->PushCell(*punMsgType);
