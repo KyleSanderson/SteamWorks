@@ -216,6 +216,7 @@ native bool:SteamWorks_GetPublicIP(ipaddr[4]);
 native SteamWorks_GetPublicIPCell();
 native bool:SteamWorks_IsLoaded();
 native bool:SteamWorks_SetGameDescription(String:sDesc[]);
+native bool:SteamWorks_SetMapName(String:sMapName[]);
 native bool:SteamWorks_IsConnected();
 native bool:SteamWorks_SetRule(const String:sKey[], const String:sValue[]);
 native bool:SteamWorks_ClearRules();
