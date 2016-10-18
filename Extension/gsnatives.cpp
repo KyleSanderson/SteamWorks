@@ -104,6 +104,22 @@ static cell_t sm_SetGameDescription(IPluginContext *pContext, const cell_t *para
 	return 1;
 }
 
+static cell_t sm_SetMapName(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamGameServer *pServer = GetGSPointer();
+
+	if (pServer == NULL)
+	{
+		return 0;
+	}
+	
+	char *pMapName;
+	pContext->LocalToString(params[1], &pMapName);
+	
+	pServer->SetMapName(pMapName);
+	return 1;
+}
+
 static cell_t sm_IsConnected(IPluginContext *pContext, const cell_t *params)
 {
 	ISteamGameServer *pServer = GetGSPointer();
@@ -252,6 +268,7 @@ static sp_nativeinfo_t gsnatives[] = {
 	{"SteamWorks_GetPublicIPCell",				sm_GetPublicIPCell},
 	{"SteamWorks_IsLoaded",				sm_IsLoaded},
 	{"SteamWorks_SetGameDescription",	sm_SetGameDescription},
+	{"SteamWorks_SetMapName",	sm_SetMapName},
 	{"SteamWorks_IsConnected",				sm_IsConnected},
 	{"SteamWorks_SetRule",						sm_SetRule},
 	{"SteamWorks_ClearRules",						sm_ClearRules},
