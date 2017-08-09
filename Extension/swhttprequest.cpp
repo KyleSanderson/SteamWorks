@@ -621,7 +621,7 @@ static cell_t sm_GetHTTPRequestWasTimedOut(IPluginContext *pContext, const cell_
 	cell_t *pData;
 	pContext->LocalToPhysAddr(params[2], &pData);
 
-	return pHTTP->GetHTTPRequestWasTimedOut(pRequest->request, static_cast<bool *>(pData)) ? 1 : 0;
+	return pHTTP->GetHTTPRequestWasTimedOut(pRequest->request, reinterpret_cast<bool *>(pData)) ? 1 : 0;
 }
 
 static sp_nativeinfo_t httpnatives[] = {
