@@ -570,12 +570,69 @@ static cell_t sm_GetHTTPStreamingResponseBodyData(IPluginContext *pContext, cons
 	return pHTTP->GetHTTPStreamingResponseBodyData(pRequest->request, params[2], reinterpret_cast<uint8_t *>(pBuffer), params[4]) ? 1 : 0;
 }
 
+static cell_t sm_SetHTTPRequestUserAgentInfo(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
+	{
+		return 0;
+	}
+
+	char *pName;
+	pContext->LocalToString(params[2], &pName);
+
+	return pHTTP->SetHTTPRequestUserAgentInfo(pRequest->request, pName) ? 1 : 0;
+}
+
+static cell_t sm_SetHTTPRequestRequiresVerifiedCertificate(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
+	{
+		return 0;
+	}
+
+	return pHTTP->SetHTTPRequestRequiresVerifiedCertificate(pRequest->request, !!params[2]) ? 1 : 0;
+}
+
+static cell_t sm_SetHTTPRequestAbsoluteTimeoutMS(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
+	{
+		return 0;
+	}
+
+	return pHTTP->SetHTTPRequestAbsoluteTimeoutMS(pRequest->request, params[2]) ? 1 : 0;
+}
+
+static cell_t sm_GetHTTPRequestWasTimedOut(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
+	{
+		return 0;
+	}
+
+	cell_t *pData;
+	pContext->LocalToPhysAddr(params[2], &pData);
+
+	return pHTTP->GetHTTPRequestWasTimedOut(pRequest->request, static_cast<bool *>(pData)) ? 1 : 0;
+}
+
 static sp_nativeinfo_t httpnatives[] = {
 	{"SteamWorks_CreateHTTPRequest",				sm_CreateHTTPRequest},
 	{"SteamWorks_SetHTTPRequestContextValue",				sm_SetHTTPRequestContextValue},
 	{"SteamWorks_SetHTTPRequestNetworkActivityTimeout",				sm_SetHTTPRequestNetworkActivityTimeout},
 	{"SteamWorks_SetHTTPRequestHeaderValue",				sm_SetHTTPRequestHeaderValue},
 	{"SteamWorks_SetHTTPRequestGetOrPostParameter",				sm_SetHTTPRequestGetOrPostParameter},
+	{"SteamWorks_SetHTTPRequestUserAgentInfo",					sm_SetHTTPRequestUserAgentInfo},
+	{"SteamWorks_SetHTTPRequestRequiresVerifiedCertificate",				sm_SetHTTPRequestRequiresVerifiedCertificate},
+	{"SteamWorks_SetHTTPRequestAbsoluteTimeoutMS",						sm_SetHTTPRequestAbsoluteTimeoutMS},
 	{"SteamWorks_SetHTTPCallbacks",				sm_SetCallbacks},
 	{"SteamWorks_SendHTTPRequest",				sm_SendHTTPRequest},
 	{"SteamWorks_DeferHTTPRequest",				sm_DeferHTTPRequest},
@@ -585,6 +642,7 @@ static sp_nativeinfo_t httpnatives[] = {
 	{"SteamWorks_GetHTTPResponseBodySize",				sm_GetHTTPResponseBodySize},
 	{"SteamWorks_GetHTTPResponseBodyData",				sm_GetHTTPResponseBodyData},
 	{"SteamWorks_GetHTTPDownloadProgressPct",				sm_GetHTTPDownloadProgressPct},
+	{"SteamWorks_GetHTTPRequestWasTimedOut",				sm_GetHTTPRequestWasTimedOut},
 	{"SteamWorks_SetHTTPRequestRawPostBody",				sm_SetHTTPRequestRawPostBody},
 	{"SteamWorks_GetHTTPResponseBodyCallback",				sm_GetHTTPResponseBodyCallback},
 	{"SteamWorks_WriteHTTPResponseBodyToFile",				sm_WriteHTTPResponseBodyToFile},

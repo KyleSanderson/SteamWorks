@@ -215,8 +215,8 @@ native bool:SteamWorks_IsVACEnabled();
 native bool:SteamWorks_GetPublicIP(ipaddr[4]);
 native SteamWorks_GetPublicIPCell();
 native bool:SteamWorks_IsLoaded();
-native bool:SteamWorks_SetGameDescription(String:sDesc[]);
-native bool:SteamWorks_SetMapName(String:sMapName[]);
+native bool:SteamWorks_SetGameDescription(const String:sDesc[]);
+native bool:SteamWorks_SetMapName(const String:sMapName[]);
 native bool:SteamWorks_IsConnected();
 native bool:SteamWorks_SetRule(const String:sKey[], const String:sValue[]);
 native bool:SteamWorks_ClearRules();
@@ -240,6 +240,10 @@ native bool:SteamWorks_SetHTTPRequestContextValue(Handle:hHandle, any:data1, any
 native bool:SteamWorks_SetHTTPRequestNetworkActivityTimeout(Handle:hHandle, timeout);
 native bool:SteamWorks_SetHTTPRequestHeaderValue(Handle:hHandle, const String:sName[], const String:sValue[]);
 native bool:SteamWorks_SetHTTPRequestGetOrPostParameter(Handle:hHandle, const String:sName[], const String:sValue[]);
+native bool:SteamWorks_SetHTTPRequestUserAgentInfo(Handle:hHandle, const String:sUserAgentInfo[]);
+native bool:SteamWorks_SetHTTPRequestRequiresVerifiedCertificate(Handle:hHandle, bool:bRequireVerifiedCertificate);
+native bool:SteamWorks_SetHTTPRequestAbsoluteTimeoutMS(Handle:hHandle, unMilliseconds);
+
 
 funcenum SteamWorksHTTPRequestCompleted
 {
@@ -273,6 +277,7 @@ native bool:SteamWorks_GetHTTPResponseBodySize(Handle:hRequest, &size);
 native bool:SteamWorks_GetHTTPResponseBodyData(Handle:hRequest, String:sBody[], length);
 native bool:SteamWorks_GetHTTPStreamingResponseBodyData(Handle:hRequest, cOffset, String:sBody[], length);
 native bool:SteamWorks_GetHTTPDownloadProgressPct(Handle:hRequest, &Float:percent);
+native bool:SteamWorks_GetHTTPRequestWasTimedOut(Handle:hRequest, &bool:bWasTimedOut);
 native bool:SteamWorks_SetHTTPRequestRawPostBody(Handle:hRequest, const String:sContentType[], const String:sBody[], bodylen);
 
 funcenum SteamWorksHTTPBodyCallback
