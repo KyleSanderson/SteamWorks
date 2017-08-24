@@ -178,7 +178,7 @@ void SteamWorksGCHooks::RemoveHooks(ISteamGameCoordinator *pGC, bool destroyed)
 	}
 
 	this->uHooked = eHooking;
-	smutils->AddGameFrameHook(OurGameFrameHook);
+	smutils->AddGameFrameHook(OurGCGameFrameHook);
 }
 
 void OurGCGameFrameHook(bool simulating) /* What we do for SDK independence. */
