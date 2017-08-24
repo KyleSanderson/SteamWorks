@@ -42,7 +42,15 @@ SteamWorksGSHooks::SteamWorksGSHooks()
 	this->pFOTR = forwards->CreateForward("SteamWorks_TokenRequested", ET_Ignore, 2, NULL, Param_String, Param_Cell);
 	this->pOBAS = forwards->CreateForward("SteamWorks_BeginAuthSession", ET_Ignore, 3, NULL, Param_Array, Param_Cell, Param_Cell);
 	
-	smutils->AddGameFrameHook(OurGameFrameHook);
+	ISteamGameServer *pGameServer = GetGameServerPointer();
+	if (pGameServer)
+	{
+		this->AddHooks(pGameServer);
+	}
+	else
+	{
+		smutils->AddGameFrameHook(OurGameFrameHook);
+	}
 }
 
 SteamWorksGSHooks::~SteamWorksGSHooks()

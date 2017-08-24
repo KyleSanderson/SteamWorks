@@ -41,7 +41,15 @@ SteamWorksGCHooks::SteamWorksGCHooks()
 	this->pGCMsgAvail = forwards->CreateForward("SteamWorks_GCMsgAvailable", ET_Ignore, 1, NULL, Param_Cell);
 	this->pGCRetMsg = forwards->CreateForward("SteamWorks_GCRetrieveMessage", ET_Event, 5, NULL, Param_Cell, Param_Cell, Param_String, Param_Cell, Param_Cell);
 	
-	smutils->AddGameFrameHook(OurGCGameFrameHook);
+	ISteamGameCoordinator *pGC = GetSteamGCPointer();
+	if (pGC)
+	{
+		this->AddHooks(pGC);
+	}
+	else
+	{
+		smutils->AddGameFrameHook(OurGCGameFrameHook);
+	}
 }
 
 SteamWorksGCHooks::~SteamWorksGCHooks()
