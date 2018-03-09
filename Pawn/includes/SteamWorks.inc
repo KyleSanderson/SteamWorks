@@ -247,23 +247,23 @@ native bool SteamWorks_SetHTTPRequestAbsoluteTimeoutMS(Handle hHandle, int unMil
 
 typeset SteamWorksHTTPRequestCompleted
 {
-	function void (Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode),
-	function void (Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode, any data1),
-	function void (Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode, any data1, any data2)
+	function void (Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode);
+	function void (Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode, any data1);
+	function void (Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode, any data1, any data2);
 };
 
 typeset SteamWorksHTTPHeadersReceived
 {
-	function void (Handle hRequest, bool bFailure),
-	function void (Handle hRequest, bool bFailure, any data1),
-	function void (Handle hRequest, bool bFailure, any data1, any data2)
+	function void (Handle hRequest, bool bFailure);
+	function void (Handle hRequest, bool bFailure, any data1);
+	function void (Handle hRequest, bool bFailure, any data1, any data2);
 };
 
 typeset SteamWorksHTTPDataReceived
 {
-	function void (Handle hRequest, bool bFailure, int offset, int bytesreceived),
-	function void (Handle hRequest, bool bFailure, int offset, int bytesreceived, any data1),
-	function void (Handle hRequest, bool bFailure, int offset, int bytesreceived, any data1, any data2)
+	function void (Handle hRequest, bool bFailure, int offset, int bytesreceived);
+	function void (Handle hRequest, bool bFailure, int offset, int bytesreceived, any data1);
+	function void (Handle hRequest, bool bFailure, int offset, int bytesreceived, any data1, any data2);
 };
 
 native bool SteamWorks_SetHTTPCallbacks(Handle hHandle, SteamWorksHTTPRequestCompleted fCompleted = INVALID_FUNCTION, SteamWorksHTTPHeadersReceived fHeaders = INVALID_FUNCTION, SteamWorksHTTPDataReceived fData = INVALID_FUNCTION, Handle hCalling = null);
@@ -282,9 +282,9 @@ native bool SteamWorks_SetHTTPRequestRawPostBody(Handle hRequest, const char[] s
 
 typeset SteamWorksHTTPBodyCallback
 {
-	function void (const char[] sData),
-	function void (const char[] sData, any value),
-	function void (const char[] data, any value, int datalen)
+	function void (const char[] sData);
+	function void (const char[] sData, any value);
+	function void (const char[] data, any value, int datalen);
 };
 
 native bool SteamWorks_GetHTTPResponseBodyCallback(Handle hRequest, SteamWorksHTTPBodyCallback fCallback, any data = 0, Handle hPlugin = null);
