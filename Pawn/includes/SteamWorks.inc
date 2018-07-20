@@ -216,6 +216,7 @@ native bool:SteamWorks_IsVACEnabled();
 native bool:SteamWorks_GetPublicIP(ipaddr[4]);
 native SteamWorks_GetPublicIPCell();
 native bool:SteamWorks_IsLoaded();
+native bool:SteamWorks_SetGameData(const String:sData[]);
 native bool:SteamWorks_SetGameDescription(const String:sDesc[]);
 native bool:SteamWorks_SetMapName(const String:sMapName[]);
 native bool:SteamWorks_IsConnected();
@@ -331,6 +332,7 @@ public __ext_SteamWorks_SetNTVOptional()
 	MarkNativeAsOptional("SteamWorks_GetPublicIP");
 	MarkNativeAsOptional("SteamWorks_GetPublicIPCell");
 	MarkNativeAsOptional("SteamWorks_IsLoaded");
+	MarkNativeAsOptional("SteamWorks_SetGameData");
 	MarkNativeAsOptional("SteamWorks_SetGameDescription");
 	MarkNativeAsOptional("SteamWorks_IsConnected");
 	MarkNativeAsOptional("SteamWorks_SetRule");
