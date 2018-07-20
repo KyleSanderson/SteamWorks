@@ -104,7 +104,6 @@ static cell_t sm_SetGameData(IPluginContext *pContext, const cell_t *params)
 	return 1;
 }
 
-
 static cell_t sm_SetGameDescription(IPluginContext *pContext, const cell_t *params)
 {
 	ISteamGameServer *pServer = GetGSPointer();
