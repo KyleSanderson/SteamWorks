@@ -511,6 +511,58 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 	return 1;
 }
 
+static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+
+	if (pRequest == NULL)
+	{
+		return 0;
+	}
+
+	char *pContentType;
+	pContext->LocalToString(params[2], &pContentType);
+
+	char *pFilePath;
+	pContext->LocalToString(params[3], &pFilePath);
+
+	char szFinalPath[PLATFORM_MAX_PATH];
+	smutils->BuildPath(Path_Game, szFinalPath, sizeof(szFinalPath), "%s", pFilePath);
+
+	FILE *pInputFile = fopen(szFinalPath, "rb");
+
+	if (!pInputFile)
+	{
+		return pContext->ThrowNativeError("Unable to open %s for reading. errno: %d", szFinalPath, errno);
+	}
+
+	uint32_t size;
+
+	fseek(pInputFile, 0, SEEK_END);
+	size = ftell(pInputFile);
+	fseek(pInputFile, 0, SEEK_SET);
+
+	if (size <= 0)
+	{
+		fclose(pInputFile);
+		return 0;
+	}
+
+	char *pBuffer = new char[size + 1];
+	fread(pBuffer, sizeof(char), size, pInputFile);
+	fclose(pInputFile);
+
+	if (pHTTP->SetHTTPRequestRawPostBody(pRequest->request, pContentType, reinterpret_cast<uint8_t *>(pBuffer), size) == false)
+	{
+		delete [] pBuffer;
+		return 0;
+	}
+
+	delete [] pBuffer;
+	return 1;
+}
+
 static cell_t sm_WriteHTTPResponseBodyToFile(IPluginContext *pContext, const cell_t *params)
 {
 	ISteamHTTP *pHTTP;
@@ -644,6 +696,7 @@ static sp_nativeinfo_t httpnatives[] = {
 	{"SteamWorks_GetHTTPDownloadProgressPct",				sm_GetHTTPDownloadProgressPct},
 	{"SteamWorks_GetHTTPRequestWasTimedOut",				sm_GetHTTPRequestWasTimedOut},
 	{"SteamWorks_SetHTTPRequestRawPostBody",				sm_SetHTTPRequestRawPostBody},
+	{"SteamWorks_SetHTTPRequestRawPostBodyFromFile",		sm_SetHTTPRequestRawPostBodyFromFile},
 	{"SteamWorks_GetHTTPResponseBodyCallback",				sm_GetHTTPResponseBodyCallback},
 	{"SteamWorks_WriteHTTPResponseBodyToFile",				sm_WriteHTTPResponseBodyToFile},
 	{"SteamWorks_SendHTTPRequestAndStreamResponse",			sm_SendHTTPRequestAndStreamResponse},
