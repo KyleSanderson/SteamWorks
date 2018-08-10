@@ -531,13 +531,13 @@ static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, con
 	smutils->BuildPath(Path_Game, szFinalPath, sizeof(szFinalPath), "%s", pFilePath);
 
 	FILE *pInputFile = fopen(szFinalPath, "rb");
-
 	if (!pInputFile)
 	{
 		return pContext->ThrowNativeError("Unable to open %s for reading. errno: %d", szFinalPath, errno);
 	}
 
 	uint32_t size;
+	uint32_t itemsRead;
 
 	fseek(pInputFile, 0, SEEK_END);
 	size = ftell(pInputFile);
@@ -550,17 +550,19 @@ static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, con
 	}
 
 	char *pBuffer = new char[size + 1];
-	fread(pBuffer, sizeof(char), size, pInputFile);
+	itemsRead = fread(pBuffer, sizeof(char), size, pInputFile);
 	fclose(pInputFile);
 
-	if (pHTTP->SetHTTPRequestRawPostBody(pRequest->request, pContentType, reinterpret_cast<uint8_t *>(pBuffer), size) == false)
+	if (itemsRead != size)
 	{
 		delete [] pBuffer;
 		return 0;
 	}
 
+	cell_t result = pHTTP->SetHTTPRequestRawPostBody(pRequest->request, pContentType, reinterpret_cast<uint8_t *>(pBuffer), size) ? 1 : 0;
+
 	delete [] pBuffer;
-	return 1;
+	return result;
 }
 
 static cell_t sm_WriteHTTPResponseBodyToFile(IPluginContext *pContext, const cell_t *params)
