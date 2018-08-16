@@ -458,6 +458,56 @@ static cell_t sm_SetHTTPRequestRawPostBody(IPluginContext *pContext, const cell_
 	return pHTTP->SetHTTPRequestRawPostBody(pRequest->request, pName, reinterpret_cast<uint8_t *>(pBuffer), params[4]) ? 1 : 0;
 }
 
+static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, const cell_t *params)
+{
+	ISteamHTTP *pHTTP;
+	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
+	if (pRequest == NULL)
+	{
+		return 0;
+	}
+
+	char *pContentType, *pFilePath;
+	pContext->LocalToString(params[2], &pContentType);
+	pContext->LocalToString(params[3], &pFilePath);
+
+	char szFinalPath[PLATFORM_MAX_PATH];
+	smutils->BuildPath(Path_Game, szFinalPath, sizeof(szFinalPath), "%s", pFilePath);
+
+	FILE *pInputFile = fopen(szFinalPath, "rb");
+	if (!pInputFile)
+	{
+		return pContext->ThrowNativeError("Unable to open %s for reading. errno: %d", szFinalPath, errno);
+	}
+
+	uint32_t size;
+	fseek(pInputFile, 0, SEEK_END);
+	size = ftell(pInputFile);
+	fseek(pInputFile, 0, SEEK_SET);
+
+	if (size <= 0)
+	{
+		fclose(pInputFile);
+		return 0;
+	}
+
+	uint32_t itemsRead;
+	char *pBuffer = new char[size + 1];
+	itemsRead = fread(pBuffer, sizeof(char), size, pInputFile);
+	fclose(pInputFile);
+
+	if (itemsRead != size)
+	{
+		delete [] pBuffer;
+		return 0;
+	}
+
+	cell_t result = pHTTP->SetHTTPRequestRawPostBody(pRequest->request, pContentType, reinterpret_cast<uint8_t *>(pBuffer), size) ? 1 : 0;
+
+	delete [] pBuffer;
+	return result;
+}
+
 static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cell_t *params)
 {
 	ISteamHTTP *pHTTP;
@@ -509,56 +559,6 @@ static cell_t sm_GetHTTPResponseBodyCallback(IPluginContext *pContext, const cel
 
 	delete [] pBuffer;
 	return 1;
-}
-
-static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, const cell_t *params)
-{
-	ISteamHTTP *pHTTP;
-	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
-	if (pRequest == NULL)
-	{
-		return 0;
-	}
-
-	char *pContentType, *pFilePath;
-	pContext->LocalToString(params[2], &pContentType);
-	pContext->LocalToString(params[3], &pFilePath);
-
-	char szFinalPath[PLATFORM_MAX_PATH];
-	smutils->BuildPath(Path_Game, szFinalPath, sizeof(szFinalPath), "%s", pFilePath);
-
-	FILE *pInputFile = fopen(szFinalPath, "rb");
-	if (!pInputFile)
-	{
-		return pContext->ThrowNativeError("Unable to open %s for reading. errno: %d", szFinalPath, errno);
-	}
-
-	uint32_t size;
-	fseek(pInputFile, 0, SEEK_END);
-	size = ftell(pInputFile);
-	fseek(pInputFile, 0, SEEK_SET);
-
-	if (size <= 0)
-	{
-		fclose(pInputFile);
-		return 0;
-	}
-
-	uint32_t itemsRead;
-	char *pBuffer = new char[size + 1];
-	itemsRead = fread(pBuffer, sizeof(char), size, pInputFile);
-	fclose(pInputFile);
-
-	if (itemsRead != size)
-	{
-		delete [] pBuffer;
-		return 0;
-	}
-
-	cell_t result = pHTTP->SetHTTPRequestRawPostBody(pRequest->request, pContentType, reinterpret_cast<uint8_t *>(pBuffer), size) ? 1 : 0;
-
-	delete [] pBuffer;
-	return result;
 }
 
 static cell_t sm_WriteHTTPResponseBodyToFile(IPluginContext *pContext, const cell_t *params)
