@@ -515,16 +515,13 @@ static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, con
 {
 	ISteamHTTP *pHTTP;
 	SteamWorksHTTPRequest *pRequest = GetRequestPointer(pHTTP, pContext, params[1]);
-
 	if (pRequest == NULL)
 	{
 		return 0;
 	}
 
-	char *pContentType;
+	char *pContentType, *pFilePath;
 	pContext->LocalToString(params[2], &pContentType);
-
-	char *pFilePath;
 	pContext->LocalToString(params[3], &pFilePath);
 
 	char szFinalPath[PLATFORM_MAX_PATH];
@@ -537,8 +534,6 @@ static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, con
 	}
 
 	uint32_t size;
-	uint32_t itemsRead;
-
 	fseek(pInputFile, 0, SEEK_END);
 	size = ftell(pInputFile);
 	fseek(pInputFile, 0, SEEK_SET);
@@ -549,6 +544,7 @@ static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, con
 		return 0;
 	}
 
+	uint32_t itemsRead;
 	char *pBuffer = new char[size + 1];
 	itemsRead = fread(pBuffer, sizeof(char), size, pInputFile);
 	fclose(pInputFile);
