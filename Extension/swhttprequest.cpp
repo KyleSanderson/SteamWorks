@@ -480,9 +480,8 @@ static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, con
 		return pContext->ThrowNativeError("Unable to open %s for reading. errno: %d", szFinalPath, errno);
 	}
 
-	uint32_t size;
 	fseek(pInputFile, 0, SEEK_END);
-	size = ftell(pInputFile);
+	uint32_t size = ftell(pInputFile);
 	fseek(pInputFile, 0, SEEK_SET);
 
 	if (size <= 0)
@@ -491,9 +490,8 @@ static cell_t sm_SetHTTPRequestRawPostBodyFromFile(IPluginContext *pContext, con
 		return 0;
 	}
 
-	uint32_t itemsRead;
 	char *pBuffer = new char[size + 1];
-	itemsRead = fread(pBuffer, sizeof(char), size, pInputFile);
+	uint32_t itemsRead = fread(pBuffer, sizeof(char), size, pInputFile);
 	fclose(pInputFile);
 
 	if (itemsRead != size)
