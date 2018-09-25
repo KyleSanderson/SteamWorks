@@ -246,6 +246,36 @@ native bool:SteamWorks_SetHTTPRequestUserAgentInfo(Handle:hHandle, const String:
 native bool:SteamWorks_SetHTTPRequestRequiresVerifiedCertificate(Handle:hHandle, bool:bRequireVerifiedCertificate);
 native bool:SteamWorks_SetHTTPRequestAbsoluteTimeoutMS(Handle:hHandle, unMilliseconds);
 
+#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 9
+typeset SteamWorksHTTPRequestCompleted
+{
+	function void (Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode);
+	function void (Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode, any data1);
+	function void (Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode, any data1, any data2);
+};
+
+typeset SteamWorksHTTPHeadersReceived
+{
+	function void (Handle hRequest, bool bFailure);
+	function void (Handle hRequest, bool bFailure, any data1);
+	function void (Handle hRequest, bool bFailure, any data1, any data2);
+};
+
+typeset SteamWorksHTTPDataReceived
+{
+	function void (Handle hRequest, bool bFailure, int offset, int bytesreceived);
+	function void (Handle hRequest, bool bFailure, int offset, int bytesreceived, any data1);
+	function void (Handle hRequest, bool bFailure, int offset, int bytesreceived, any data1, any data2);
+};
+
+typeset SteamWorksHTTPBodyCallback
+{
+	function void (const char sData[]);
+	function void (const char sData[], any value);
+	function void (const int data[], any value, int datalen);
+};
+
+#else
 
 funcenum SteamWorksHTTPRequestCompleted
 {
@@ -268,6 +298,15 @@ funcenum SteamWorksHTTPDataReceived
 	public(Handle:hRequest, bool:bFailure, offset, bytesreceived, any:data1, any:data2)
 };
 
+funcenum SteamWorksHTTPBodyCallback
+{
+	public(const String:sData[]),
+	public(const String:sData[], any:value),
+	public(const data[], any:value, datalen)
+};
+
+#endif
+
 native bool:SteamWorks_SetHTTPCallbacks(Handle:hHandle, SteamWorksHTTPRequestCompleted:fCompleted = INVALID_FUNCTION, SteamWorksHTTPHeadersReceived:fHeaders = INVALID_FUNCTION, SteamWorksHTTPDataReceived:fData = INVALID_FUNCTION, Handle:hCalling = INVALID_HANDLE);
 native bool:SteamWorks_SendHTTPRequest(Handle:hRequest);
 native bool:SteamWorks_SendHTTPRequestAndStreamResponse(Handle:hRequest);
@@ -283,14 +322,7 @@ native bool:SteamWorks_GetHTTPRequestWasTimedOut(Handle:hRequest, &bool:bWasTime
 native bool:SteamWorks_SetHTTPRequestRawPostBody(Handle:hRequest, const String:sContentType[], const String:sBody[], bodylen);
 native bool:SteamWorks_SetHTTPRequestRawPostBodyFromFile(Handle:hRequest, const String:sContentType[], const String:sFileName[]);
 
-funcenum SteamWorksHTTPBodyCallback
-{
-	public(const String:sData[]),
-	public(const String:sData[], any:value),
-	public(const data[], any:value, datalen)
-};
-
-native bool:SteamWorks_GetHTTPResponseBodyCallback(Handle:hRequest, SteamWorksHTTPBodyCallback:fCallback, any:data = 0, Handle:hPlugin = INVALID_HANDLE);
+native bool:SteamWorks_GetHTTPResponseBodyCallback(Handle:hRequest, SteamWorksHTTPBodyCallback:fCallback, any:data = 0, Handle:hPlugin = INVALID_HANDLE); /* Look up, moved definition for 1.7+ compat. */
 native bool:SteamWorks_WriteHTTPResponseBodyToFile(Handle:hRequest, const String:sFileName[]);
 
 forward SW_OnValidateClient(ownerauthid, authid);
