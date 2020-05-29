@@ -1,0 +1,23 @@
+git:
+  depth: 1
+language: cpp
+compiler: gcc
+sudo: false
+
+before_script:
+ - CHECKOUT_DIR=$PWD && cd ..
+ - git checkout https://github.com/alliedmodders/ambuild
+ - cd ambuild
+ - python setup.py build
+ - python setup.py install --user
+ - cd ..
+ - git clone https://github.com/SteamDatabase/SteamworksSDK SteamworksSDK
+ - git clone -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk
+ - git clone https://github.com/alliedmodders/metamod-source.git mmsource-central
+ - git clone https://github.com/alliedmodders/sourcemod.git sourcemod-central
+
+script:
+ - PATH="~/.local/bin:$PATH"
+ - mkdir build && cd build
+ - ./../configure.py --hl2sdk-root ../../hl2sdk --sm-path ../../sourcemod-central --mms-path ../../mmsource-central --steamworks-path ../../SteamworksSDK 
+ - ambuild
