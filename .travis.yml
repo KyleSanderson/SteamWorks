@@ -6,7 +6,7 @@ sudo: false
 
 before_script:
  - CHECKOUT_DIR=$PWD && cd ..
- - git checkout https://github.com/alliedmodders/ambuild.git
+ - git clone https://github.com/alliedmodders/ambuild.git
  - cd ambuild
  - python setup.py build
  - python setup.py install --user
