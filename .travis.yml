@@ -6,12 +6,12 @@ sudo: false
 
 before_script:
  - CHECKOUT_DIR=$PWD && cd ..
- - git checkout https://github.com/alliedmodders/ambuild
+ - git checkout https://github.com/alliedmodders/ambuild.git
  - cd ambuild
  - python setup.py build
  - python setup.py install --user
  - cd ..
- - git clone https://github.com/SteamDatabase/SteamworksSDK SteamworksSDK
+ - git clone https://github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
  - git clone -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk
  - git clone https://github.com/alliedmodders/metamod-source.git mmsource-central
  - git clone https://github.com/alliedmodders/sourcemod.git sourcemod-central
