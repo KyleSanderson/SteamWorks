@@ -22,7 +22,7 @@ before_script:
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://github.com/alliedmodders/metamod-source.git mmsource-central
- - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.9-dev https://github.com/alliedmodders/sourcemod.git sourcemod-central
+ - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.7-dev https://github.com/alliedmodders/sourcemod.git sourcemod-central
  - cd $CHECKOUT_DIR
 
 script:
