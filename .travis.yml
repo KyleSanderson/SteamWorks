@@ -19,10 +19,10 @@ before_script:
  - python setup.py build
  - python setup.py install --user
  - cd ..
- - git clone --depth 1 --recurse-submodules -j8 https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
- - git clone --depth 1 --recurse-submodules -j8 -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
- - git clone --depth 1 --recurse-submodules -j8 https://github.com/alliedmodders/metamod-source.git mmsource-central
- - git clone --depth 1 --recurse-submodules -j8 https://github.com/alliedmodders/sourcemod.git sourcemod-central
+ - git clone --depth 1 --recurse-submodules --remote-submodules -j8 https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
+ - git clone --depth 1 --recurse-submodules --remote-submodules -j8 -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
+ - git clone --depth 1 --recurse-submodules --remote-submodules -j8 https://github.com/alliedmodders/metamod-source.git mmsource-central
+ - git clone --depth 1 --recurse-submodules --remote-submodules -j8 https://github.com/alliedmodders/sourcemod.git sourcemod-central
  - cd $CHECKOUT_DIR
 
 script:
