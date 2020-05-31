@@ -16,14 +16,13 @@ before_script:
  - python setup.py install --user
  - cd ..
  - git clone https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
- - git clone -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk
+ - git clone -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
  - git clone https://github.com/alliedmodders/metamod-source.git mmsource-central
  - git clone https://github.com/alliedmodders/sourcemod.git sourcemod-central
- - ls -la
  - cd $CHECKOUT_DIR
 
 script:
  - PATH="~/.local/bin:$PATH"
  - mkdir build && cd build
- - python ../configure.py --hl2sdk-root=../hl2sdk --sm-path=../sourcemod-central --mms-path=../mmsource-central --steamworks-path=../SteamworksSDK 
+ - python ../configure.py -s 'sdk2013' --hl2sdk-root=../../ --sm-path=../../sourcemod-central --mms-path=../../mmsource-central --steamworks-path=../../SteamworksSDK 
  - ambuild
