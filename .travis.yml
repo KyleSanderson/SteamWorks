@@ -36,7 +36,7 @@ script:
 deploy:
   provider: releases
   api_key:
-    secure: "VLNd1mCrVbm9e/3pMmmKy1eJQu46z3HlHE4HZ8udQ0lPL2ttPmks1Ggv5M6eCr27v6k5DNyWymjgbj8h6+/2fv/qukyEu5N2xOJriItrpB/gcq7U5SlLweqjk3suCV2ulv8xjXQeqXlKa25bb61M/ALiv/I6AvQNvu8lAGYceOI="
+    secure: "Px60/dTgw3w6ZvxzyuilYaHHWFHWQ1rONhpbWJbxzz5+dfkmiqVyYLszlBrbS6tbyOv/oBMqcaOXsB7mv4OOlvKQPOjc8siS8ux1Ows8WL+yvRR/rGS0j28pP6HKN11hBerxOps3sqiCyNa2gNJ+3vX987SIekpIb5nqzuqg+yQ="
   file_glob: true
   file: package/*
   skip_cleanup: true
