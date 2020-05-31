@@ -10,7 +10,7 @@ env:
 
 addons:
   apt:
-    packages: ['lib32stdc++6', 'lib32z1-dev', 'libc6-dev-i386', 'linux-libc-dev:i386', 'gcc6-multilib', 'g++6-multilib' ]
+    packages: ['lib32stdc++6', 'lib32z1-dev', 'libc6-dev-i386', 'linux-libc-dev:i386', 'gcc-6-multilib', 'g++-6-multilib' ]
 
 before_script:
  - CHECKOUT_DIR=$PWD && cd ..
