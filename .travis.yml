@@ -4,6 +4,10 @@ language: cpp
 compiler: gcc
 sudo: false
 
+env:
+ global:
+   - secure: "VsvGz6WqBVbT+RpnaWwYb16mVvQHQMvzfRxLlUEnYBVkKCWBgyECDXRL/ShBwGW+aMYW25ZPt/aJNk7rN/wvTrgGU2N9X6CrfVyGPp94HPSYPzEbZSXRoCGex30HkVVITYUBDd06CWuMMIOgS7At/XdJIR1ZjZpOr91Oze3YbGA="
+
 before_script:
  - CHECKOUT_DIR=$PWD && cd ..
  - git clone https://github.com/alliedmodders/ambuild.git
@@ -11,7 +15,7 @@ before_script:
  - python setup.py build
  - python setup.py install --user
  - cd ..
- - git clone https://github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
+ - git clone https://$(OAUTH)@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
  - git clone -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk
  - git clone https://github.com/alliedmodders/metamod-source.git mmsource-central
  - git clone https://github.com/alliedmodders/sourcemod.git sourcemod-central
