@@ -1,0 +1,44 @@
+git:
+  depth: 1
+language: cpp
+compiler: gcc
+sudo: false
+dist: trusty
+
+env:
+ global:
+   - secure: "VsvGz6WqBVbT+RpnaWwYb16mVvQHQMvzfRxLlUEnYBVkKCWBgyECDXRL/ShBwGW+aMYW25ZPt/aJNk7rN/wvTrgGU2N9X6CrfVyGPp94HPSYPzEbZSXRoCGex30HkVVITYUBDd06CWuMMIOgS7At/XdJIR1ZjZpOr91Oze3YbGA="
+
+addons:
+  apt:
+    sources: ['ubuntu-toolchain-r-test']
+    packages: ['g++-6', 'g++-6-multilib', 'lib32stdc++6', 'lib32z1-dev', 'libc6-dev-i386', 'linux-libc-dev', 'g++-multilib']
+
+before_script:
+ - CHECKOUT_DIR=$PWD && cd ..
+ - git clone https://github.com/alliedmodders/ambuild.git
+ - cd ambuild
+ - python setup.py build
+ - python setup.py install --user
+ - cd ..
+ - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
+ - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
+ - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://github.com/alliedmodders/metamod-source.git mmsource-central
+ - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.7-dev https://github.com/alliedmodders/sourcemod.git sourcemod-central
+ - cd $CHECKOUT_DIR
+
+script:
+ - PATH="~/.local/bin:$PATH"
+ - mkdir build && cd build
+ - python ../configure.py -s 'sdk2013' --hl2sdk-root=../../ --sm-path=../../sourcemod-central --mms-path=../../mmsource-central --steamworks-path=../../SteamworksSDK 
+ - ambuild
+ 
+deploy:
+  provider: releases
+  api_key:
+    secure: "VLNd1mCrVbm9e/3pMmmKy1eJQu46z3HlHE4HZ8udQ0lPL2ttPmks1Ggv5M6eCr27v6k5DNyWymjgbj8h6+/2fv/qukyEu5N2xOJriItrpB/gcq7U5SlLweqjk3suCV2ulv8xjXQeqXlKa25bb61M/ALiv/I6AvQNvu8lAGYceOI="
+  file_glob: true
+  file: package/*
+  skip_cleanup: true
+  on:
+    tags: true
