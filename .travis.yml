@@ -19,6 +19,7 @@ before_script:
  - git clone -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk
  - git clone https://github.com/alliedmodders/metamod-source.git mmsource-central
  - git clone https://github.com/alliedmodders/sourcemod.git sourcemod-central
+ - ls -la
  - cd $CHECKOUT_DIR
 
 script:
@@ -26,3 +27,4 @@ script:
  - mkdir build && cd build
  - python ../configure.py --hl2sdk-root=../../hl2sdk --sm-path=../../sourcemod-central --mms-path=../../mmsource-central --steamworks-path=../../SteamworksSDK 
  - ambuild
+ 
