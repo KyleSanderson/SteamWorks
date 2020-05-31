@@ -9,6 +9,8 @@ env:
    - secure: "VsvGz6WqBVbT+RpnaWwYb16mVvQHQMvzfRxLlUEnYBVkKCWBgyECDXRL/ShBwGW+aMYW25ZPt/aJNk7rN/wvTrgGU2N9X6CrfVyGPp94HPSYPzEbZSXRoCGex30HkVVITYUBDd06CWuMMIOgS7At/XdJIR1ZjZpOr91Oze3YbGA="
 
 before_script:
+ - apt-get update
+ - apt-get install libc6-dev-i386
  - CHECKOUT_DIR=$PWD && cd ..
  - git clone https://github.com/alliedmodders/ambuild.git
  - cd ambuild
