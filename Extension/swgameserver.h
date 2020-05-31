@@ -21,7 +21,7 @@
 #include "steam_gameserver.h"
 #include "isteamgamecoordinator.h"
 
-#ifdef STEAM_API_INTERNAL_H
+#if defined(STEAM_API_INTERNAL_H) || !defined(STEAM_API_EXPORTS)
 	S_API ISteamClient *g_pSteamClientGameServer; /* This is awful. */
 #endif
 
