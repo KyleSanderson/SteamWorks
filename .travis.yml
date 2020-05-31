@@ -25,3 +25,4 @@ script:
  - mkdir build && cd build
  - ./../configure.py --hl2sdk-root ../../hl2sdk --sm-path ../../sourcemod-central --mms-path ../../mmsource-central --steamworks-path ../../SteamworksSDK 
  - ambuild
+ - echo :)
