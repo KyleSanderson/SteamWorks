@@ -32,3 +32,13 @@ script:
  - mkdir build && cd build
  - python ../configure.py -s 'sdk2013' --hl2sdk-root=../../ --sm-path=../../sourcemod-central --mms-path=../../mmsource-central --steamworks-path=../../SteamworksSDK 
  - ambuild
+ 
+ deploy:
+  provider: releases
+  api_key:
+    secure: "VLNd1mCrVbm9e/3pMmmKy1eJQu46z3HlHE4HZ8udQ0lPL2ttPmks1Ggv5M6eCr27v6k5DNyWymjgbj8h6+/2fv/qukyEu5N2xOJriItrpB/gcq7U5SlLweqjk3suCV2ulv8xjXQeqXlKa25bb61M/ALiv/I6AvQNvu8lAGYceOI="
+  file_glob: true
+  file: package/*
+  skip_cleanup: true
+  on:
+    tags: true
