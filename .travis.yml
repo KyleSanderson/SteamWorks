@@ -33,13 +33,14 @@ script:
  - python ../configure.py -s 'sdk2013' --hl2sdk-root=../../ --sm-path=../../sourcemod-central --mms-path=../../mmsource-central --steamworks-path=../../SteamworksSDK 
  - ambuild
  - tar czvf package-lin.tgz package
+ - export RELEASE_PKG_FILE=$(ls *.tgz)
  
 deploy:
   provider: releases
   api_key:
     secure: "Px60/dTgw3w6ZvxzyuilYaHHWFHWQ1rONhpbWJbxzz5+dfkmiqVyYLszlBrbS6tbyOv/oBMqcaOXsB7mv4OOlvKQPOjc8siS8ux1Ows8WL+yvRR/rGS0j28pP6HKN11hBerxOps3sqiCyNa2gNJ+3vX987SIekpIb5nqzuqg+yQ="
   file_glob: true
-  file: build/package-*.tgz
+  file: "${RELEASE_PKG_FILE}"
   skip_cleanup: true
   on:
     tags: true
