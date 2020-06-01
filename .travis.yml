@@ -51,6 +51,7 @@ before_script:
 script:
  - mkdir build
  - cd build
+ - cp ../AMBuildScript ../../
  - python2 ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK 
  - ambuild
  - tar czvf package-$PLAT.tgz package
