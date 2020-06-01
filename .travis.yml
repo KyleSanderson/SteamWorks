@@ -27,7 +27,7 @@ matrix:
         - PLAT="Windows"
         - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin"
         - AMB="install"
-        - CONF="python2 ../configure.py"
+        - CONF="/C/Python27/python.exe ..\configure.py"
         - PLATSPEC="choco install python2"
     - os: mac
       osx_image: xcode7.2
