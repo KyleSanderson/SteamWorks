@@ -23,7 +23,7 @@ matrix:
       language: cpp
       env:
         - OS=Windows
-        - PATH="$PATH:/C/ProgramData/chocolatey/bin/"
+        - PATH="$PATH:/C/ProgramData/chocolatey/bin/:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin"
         - AMB="install"
     - os: mac
       osx_image: xcode7.2
@@ -36,10 +36,8 @@ matrix:
 before_script:
  - CHECKOUT_DIR=$PWD && cd ..
  - git clone https://github.com/alliedmodders/ambuild.git
- - cd ambuild
- - python setup.py build
- - python setup.py $AMB
- - cd ..
+ - python ambuild/setup.py build
+ - python ambuild/setup.py $AMB
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://github.com/alliedmodders/metamod-source.git mmsource-central
