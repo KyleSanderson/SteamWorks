@@ -1,18 +1,31 @@
 git:
   depth: 1
-language: cpp
-compiler: gcc
-sudo: false
-dist: trusty
 
 env:
  global:
    - secure: "VsvGz6WqBVbT+RpnaWwYb16mVvQHQMvzfRxLlUEnYBVkKCWBgyECDXRL/ShBwGW+aMYW25ZPt/aJNk7rN/wvTrgGU2N9X6CrfVyGPp94HPSYPzEbZSXRoCGex30HkVVITYUBDd06CWuMMIOgS7At/XdJIR1ZjZpOr91Oze3YbGA="
 
-addons:
-  apt:
-    sources: ['ubuntu-toolchain-r-test']
-    packages: ['g++-6', 'g++-6-multilib', 'lib32stdc++6', 'lib32z1-dev', 'libc6-dev-i386', 'linux-libc-dev', 'g++-multilib']
+matrix:
+  fast_finish: true
+  include:
+    - os: linux
+      dist: trusty
+      language: cpp
+      compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['lib32stdc++6', 'lib32z1-dev', 'libc6-dev-i386', 'linux-libc-dev', 'g++-multilib']
+      env:
+        - OS=Linux
+    - os: windows
+      language: cpp
+      env:
+        - OS=Windows
+    - os: mac
+      language: cpp
+      env:
+        - OS=Mac
 
 before_script:
  - CHECKOUT_DIR=$PWD && cd ..
@@ -32,9 +45,9 @@ script:
  - mkdir build && cd build
  - python ../configure.py -s 'sdk2013' --hl2sdk-root=../../ --sm-path=../../sourcemod-central --mms-path=../../mmsource-central --steamworks-path=../../SteamworksSDK 
  - ambuild
- - tar czvf package-lin.tgz package
+ - tar czvf package-$OS.tgz package
  - export RELEASE_PKG_FILE=$(ls *.tgz)
- 
+
 deploy:
   provider: releases
   api_key:
