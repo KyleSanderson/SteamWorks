@@ -17,25 +17,25 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['lib32stdc++6', 'lib32z1-dev', 'libc6-dev-i386', 'linux-libc-dev', 'g++-multilib']
       env:
-        - OS="Linux"
+        - PLAT="Linux"
         - AMB="install --user"
-        - CONF="../configure.py"
+        - CONF="python ../configure.py"
     - os: windows
       language: cpp
       env:
-        - OS="Windows"
+        - PLAT="Windows"
         - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin"
         - AMB="install"
-        - CONF="..\configure.py"
+        - CONF="choco install python2 && python2 ..\configure.py"
     - os: mac
       osx_image: xcode7.2
       language: cpp
       compiler: clang
       env:
-        - OS="Mac"
+        - PLAT="Mac"
         - AMB="install"
-        - CONF="../configure.py"
-
+        - CONF="python ../configure.py"
+ 
 before_script:
  - CHECKOUT_DIR=$PWD && cd ..
  - git clone https://github.com/alliedmodders/ambuild.git
@@ -45,16 +45,16 @@ before_script:
  - cd ..
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
- - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://github.com/alliedmodders/metamod-source.git mmsource-central
+ - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.9-dev https://github.com/alliedmodders/metamod-source.git mmsource-central
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.7-dev https://github.com/alliedmodders/sourcemod.git sourcemod-central
  - cd $CHECKOUT_DIR
 
 script:
  - PATH="~/.local/bin:$PATH"
  - mkdir build && cd build
- - python $CONF -s sdk2013 --hl2sdk-root ../../ --sm-path ../../sourcemod-central --mms-path ../../mmsource-central --steamworks-path ../../SteamworksSDK 
+ - echo hi && $CONF -s sdk2013 --hl2sdk-root ../../ --sm-path ../../sourcemod-central --mms-path ../../mmsource-central --steamworks-path ../../SteamworksSDK 
  - ambuild
- - tar czvf package-$OS.tgz package
+ - tar czvf package-$PLAT.tgz package
  - export RELEASE_PKG_FILE=$(ls *.tgz)
 
 deploy:
