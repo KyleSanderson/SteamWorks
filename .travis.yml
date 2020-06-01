@@ -19,16 +19,12 @@ matrix:
       env:
         - PLAT="Linux"
         - AMB="install --user"
-        - CONF="python ../configure.py"
-        - PLATSPEC="echo hi"
     - os: windows
       language: cpp
       env:
         - PLAT="Windows"
         - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin"
         - AMB="install"
-        - CONF="python ../configure.py"
-        - PLATSPEC="echo hi"
     - os: mac
       osx_image: xcode7.2
       language: cpp
@@ -36,8 +32,6 @@ matrix:
       env:
         - PLAT="Mac"
         - AMB="install"
-        - CONF="python ../configure.py"
-        - PLATSPEC="echo hi"
  
 before_script:
  - mkdir assets && cd assets
@@ -55,8 +49,7 @@ before_script:
 script:
  - PATH="~/.local/bin:$PATH"
  - mkdir build && cd build
- - $PLATSPEC
- - $CONF -s sdk2013 --hl2sdk-root assets --sm-path assets/sourcemod-central --mms-path assets/mmsource-central --steamworks-path assets/SteamworksSDK 
+ - python ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK 
  - ambuild
  - tar czvf package-$PLAT.tgz package
  - export RELEASE_PKG_FILE=$(ls *.tgz)
