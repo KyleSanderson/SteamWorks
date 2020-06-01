@@ -17,21 +17,24 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['lib32stdc++6', 'lib32z1-dev', 'libc6-dev-i386', 'linux-libc-dev', 'g++-multilib']
       env:
-        - OS=Linux
+        - OS="Linux"
         - AMB="install --user"
+        - CONF="../configure.py"
     - os: windows
       language: cpp
       env:
-        - OS=Windows
-        - PATH="$PATH:/C/ProgramData/chocolatey/bin/:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin"
+        - OS="Windows"
+        - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin"
         - AMB="install"
+        - CONF="..\configure.py"
     - os: mac
       osx_image: xcode7.2
       language: cpp
       compiler: clang
       env:
-        - OS=Mac
+        - OS="Mac"
         - AMB="install"
+        - CONF="../configure.py"
 
 before_script:
  - CHECKOUT_DIR=$PWD && cd ..
@@ -49,7 +52,7 @@ before_script:
 script:
  - PATH="~/.local/bin:$PATH"
  - mkdir build && cd build
- - python ../configure.py -s sdk2013 --hl2sdk-root ../../ --sm-path ../../sourcemod-central --mms-path ../../mmsource-central --steamworks-path ../../SteamworksSDK 
+ - python $CONF -s sdk2013 --hl2sdk-root ../../ --sm-path ../../sourcemod-central --mms-path ../../mmsource-central --steamworks-path ../../SteamworksSDK 
  - ambuild
  - tar czvf package-$OS.tgz package
  - export RELEASE_PKG_FILE=$(ls *.tgz)
