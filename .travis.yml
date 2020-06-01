@@ -18,23 +18,26 @@ matrix:
           packages: ['lib32stdc++6', 'lib32z1-dev', 'libc6-dev-i386', 'linux-libc-dev', 'g++-multilib']
       env:
         - OS=Linux
+        - AMB="install --user"
     - os: windows
       language: cpp
       env:
         - OS=Windows
         - PATH="$PATH:/C/ProgramData/chocolatey/bin/"
+        - AMB="install"
     - os: mac
       osx_image: xcode7.2
       language: cpp
       env:
         - OS=Mac
+        - AMB="install"
 
 before_script:
  - CHECKOUT_DIR=$PWD && cd ..
  - git clone https://github.com/alliedmodders/ambuild.git
  - cd ambuild
  - python setup.py build
- - python setup.py install --user
+ - python setup.py $AMB
  - cd ..
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
