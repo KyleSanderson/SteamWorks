@@ -48,7 +48,7 @@ before_script:
 script:
  - PATH="~/.local/bin:$PATH"
  - mkdir build && cd build
- - python ../configure.py -s 'sdk2013' --hl2sdk-root=../../ --sm-path=../../sourcemod-central --mms-path=../../mmsource-central --steamworks-path=../../SteamworksSDK 
+ - python ../configure.py -s sdk2013 --hl2sdk-root ../../ --sm-path ../../sourcemod-central --mms-path ../../mmsource-central --steamworks-path ../../SteamworksSDK 
  - ambuild
  - tar czvf package-$OS.tgz package
  - export RELEASE_PKG_FILE=$(ls *.tgz)
