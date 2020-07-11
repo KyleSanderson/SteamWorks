@@ -39,7 +39,7 @@ SteamWorksGCHooks::SteamWorksGCHooks()
 	this->uHooked = eHooking;
 	this->pGCSendMsg = forwards->CreateForward("SteamWorks_GCSendMessage", ET_Event, 3, NULL, Param_Cell, Param_String, Param_Cell);
 	this->pGCMsgAvail = forwards->CreateForward("SteamWorks_GCMsgAvailable", ET_Ignore, 1, NULL, Param_Cell);
-	this->pGCRetMsg = forwards->CreateForward("SteamWorks_GCRetrieveMessage", ET_Event, 5, NULL, Param_Cell, Param_Cell, Param_String, Param_Cell, Param_Cell);
+	this->pGCRetMsg = forwards->CreateForward("SteamWorks_GCRetrieveMessage", ET_Event, 4, NULL, Param_Cell, Param_String, Param_Cell, Param_Cell);
 	
 	ISteamGameCoordinator *pGC = GetSteamGCPointer();
 	if (pGC)
@@ -152,7 +152,7 @@ EGCResults SteamWorksGCHooks::RetrieveMessage(uint32 *punMsgType, void *pubDest,
 		RETURN_META_VALUE(MRES_SUPERCEDE, static_cast<EGCResults>(Result));
 	}
 
-	RETURN_META_VALUE(MRES_IGNORED, k_EGCResultOK);
+	RETURN_META_VALUE(MRES_SUPERCEDE, res);
 }
 
 void SteamWorksGCHooks::AddHooks(ISteamGameCoordinator *pGC)
