@@ -49,7 +49,7 @@ before_script:
  - cd ..
 
 script:
- - uname -a | grep MSYS_NT && choco install choco install visualstudio2015professional && "%VS140COMNTOOLS%\vsvars32.bat || uname -a"
+ - uname -a | grep MSYS_NT && travis_wait 30 choco install visualstudio2015professional && "%VS140COMNTOOLS%\vsvars32.bat || uname -a"
  - mkdir build
  - cd build
  - cp ../AMBuildScript ../../
