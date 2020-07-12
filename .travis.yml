@@ -49,7 +49,7 @@ before_script:
  - cd ..
 
 script:
- - (uname -a | grep Msys && travis_wait 30 choco install visualstudio2015professional && "%VS140COMNTOOLS%\vsvars32.bat) || uname -a"
+ - (uname -a | grep Msys && travis_wait 30 choco install microsoft-visual-cpp-build-tools && "%VS140COMNTOOLS%\vsvars32.bat) || echo :-)"
  - mkdir build
  - cd build
  - cp ../AMBuildScript ../../
