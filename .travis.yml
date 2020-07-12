@@ -49,7 +49,7 @@ before_script:
  - cd ..
 
 script:
- - uname -a | grep Msys || exit 0 && (travis_wait 30 choco install microsoft-visual-cpp-build-tools && "%VS140COMNTOOLS%\vsvars32.bat")
+ - uname -a | grep Msys || exit 0 && (travis_wait 30 choco install microsoft-visual-cpp-build-tools && cmd /c "%VS140COMNTOOLS%\vsvars32.bat")
  - mkdir build
  - cd build
  - cp ../AMBuildScript ../../
