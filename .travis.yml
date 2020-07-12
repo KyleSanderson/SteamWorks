@@ -24,10 +24,10 @@ matrix:
       language: bash
       env:
         - AMB="install"
-        - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin:/C/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio\ 14.0/VC/bin"
+        - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin"
         - RELEASE_PKG_FILE="package-win.tgz"
-        - CC=CL.exe
-        - CXX=CL.exe
+        - CC="/C/Program\ Files\ (x86)/Microsoft\ Visual\ Studio\ 14.0/VC/bin/cl.exe"
+        - CXX="/C/Program\ Files\ (x86)/Microsoft\ Visual\ Studio\ 14.0/VC/bin/cl.exe"
     - os: mac
       osx_image: xcode7.2
       language: cpp
