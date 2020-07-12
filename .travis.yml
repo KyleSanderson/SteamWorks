@@ -20,12 +20,12 @@ matrix:
         - AMB="install --user"
         - PATH="~/.local/bin:$PATH"
         - RELEASE_PKG_FILE="package-lin.tgz"
-#    - os: windows
-#      language: cpp
-#      env:
-#        - AMB="install"
-#        - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin"
-#        - RELEASE_PKG_FILE="package-win.tgz"
+    - os: windows
+      language: cpp
+      env:
+        - AMB="install"
+        - PATH="$PATH:/C/ProgramData/chocolatey/bin"
+        - RELEASE_PKG_FILE="package-win.tgz"
     - os: mac
       osx_image: xcode7.2
       language: cpp
@@ -49,6 +49,7 @@ before_script:
  - cd ..
 
 script:
+ - uname -a || (choco install visualstudio2012professional && "%VS120COMNTOOLS%\vsvars32.bat")
  - mkdir build
  - cd build
  - cp ../AMBuildScript ../../
