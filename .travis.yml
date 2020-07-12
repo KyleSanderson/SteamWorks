@@ -24,7 +24,7 @@ matrix:
       language: bash
       env:
         - AMB="install"
-        - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin:/c/\"Program Files (x86)\"/\"Microsoft Visual Studio 14.0\"/VC/bin"
+        - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin:/c/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin"
         - RELEASE_PKG_FILE="package-win.tgz"
         - CC="cl.exe"
         - CXX="$CC"
