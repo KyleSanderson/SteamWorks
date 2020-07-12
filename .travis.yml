@@ -38,7 +38,7 @@ matrix:
         - RELEASE_PKG_FILE="package-mac.tgz"
  
 before_script:
- - (uname -a | grep Msys) && (choco install -y vcbuildtools) || echo ":-)"
+ - (uname -a | grep Msys) && (travis_wait 90 choco install -y vcbuildtools) || echo ":-)"
  - mkdir assets && cd assets
  - git clone https://github.com/alliedmodders/ambuild.git
  - cd ambuild
