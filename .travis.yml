@@ -26,8 +26,8 @@ matrix:
         - AMB="install"
         - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin"
         - RELEASE_PKG_FILE="package-win.tgz"
-        - CC="/C/Program\ Files\ (x86)/Microsoft\ Visual\ Studio\ 14.0/VC/bin/cl.exe"
-        - CXX="/C/Program\ Files\ (x86)/Microsoft\ Visual\ Studio\ 14.0/VC/bin/cl.exe"
+        - CC="/C/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio\ 14.0/VC/bin/cl.exe"
+        - CXX=($CC)
     - os: mac
       osx_image: xcode7.2
       language: cpp
