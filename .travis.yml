@@ -24,7 +24,7 @@ matrix:
       language: cpp
       env:
         - AMB="install"
-        - PATH="$PATH:/C/ProgramData/chocolatey/bin"
+        - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin"
         - RELEASE_PKG_FILE="package-win.tgz"
     - os: mac
       osx_image: xcode7.2
@@ -49,7 +49,7 @@ before_script:
  - cd ..
 
 script:
- - uname -a | grep MSYS_NT && choco install choco install visualstudio2015professional && "%VS140COMNTOOLS%\vsvars32.bat"
+ - uname -a | grep MSYS_NT && choco install choco install visualstudio2015professional && "%VS140COMNTOOLS%\vsvars32.bat || uname -a"
  - mkdir build
  - cd build
  - cp ../AMBuildScript ../../
