@@ -36,7 +36,7 @@ matrix:
         - RELEASE_PKG_FILE="package-mac.tgz"
  
 before_script:
- - (uname -a | grep Msys) && (choco install microsoft-visual-cpp-build-tools && start /wait "%VS140COMNTOOLS%\vsvars32.bat") || echo ":-)"
+ - (uname -a | grep Msys) && (choco install microsoft-visual-cpp-build-tools && call "%VS140COMNTOOLS%\vsvars32.bat") || echo ":-)"
  - mkdir assets && cd assets
  - git clone https://github.com/alliedmodders/ambuild.git
  - cd ambuild
