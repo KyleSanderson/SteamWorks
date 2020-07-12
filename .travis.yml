@@ -24,7 +24,7 @@ matrix:
       language: bash
       env:
         - AMB="install"
-        - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin:/C/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2015/Community/VC/Tools/MSVC/14.20.27508/bin/Hostx86/x86"
+        - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin:/C/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio\ 14.0/VC/bin/"
         - RELEASE_PKG_FILE="package-win.tgz"
         - CC=CL.exe
         - CXX=CL.exe
@@ -38,7 +38,7 @@ matrix:
         - RELEASE_PKG_FILE="package-mac.tgz"
  
 before_script:
- - (uname -a | grep Msys) && (choco install microsoft-visual-cpp-build-tools && echo %VS140COMNTOOLS% && dir %VS140COMNTOOLS% && call "%VS140COMNTOOLS%\vsvars32.bat") || echo ":-)"
+ - (uname -a | grep Msys) && (choco install microsoft-visual-cpp-build-tools) || echo ":-)"
  - mkdir assets && cd assets
  - git clone https://github.com/alliedmodders/ambuild.git
  - cd ambuild
