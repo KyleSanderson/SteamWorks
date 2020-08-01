@@ -17,7 +17,6 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['lib32stdc++6', 'lib32z1-dev', 'libc6-dev-i386', 'linux-libc-dev', 'g++-multilib']
       env:
-        - AMB="install --user"
         - PATH="~/.local/bin:$PATH"
         - RELEASE_PKG_FILE="package-lin.tgz"
 #    - os: windows
@@ -31,16 +30,12 @@ matrix:
       language: cpp
       compiler: clang
       env:
-        - AMB="install"
         - PATH="~/.local/bin:$PATH"
         - RELEASE_PKG_FILE="package-mac.tgz"
- 
+
 before_script:
  - mkdir assets && cd assets
- - git clone https://github.com/alliedmodders/ambuild.git
- - cd ambuild
- - python setup.py build
- - python setup.py $AMB
+ - bash ../checkout-deps.sh
  - cd ..
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
@@ -52,7 +47,7 @@ script:
  - mkdir build
  - cd build
  - cp ../AMBuildScript ../../
- - python2 ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK 
+ - python2 ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK
  - ambuild
  - tar czvf ${RELEASE_PKG_FILE} package
 
