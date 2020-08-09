@@ -37,6 +37,7 @@ matrix:
  
 before_script:
  - (uname -a | grep Msys) && (travis_wait 90 choco install -y vcbuildtools) || echo ":-)"
+ - (uname -a | grep Msys) && (curl -O https://bootstrap.pypa.io/get-pip.py && python2 get-pip.py) || echo ":-)"
  - mkdir assets && cd assets
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b fix-deps https://github.com/alliedmodders/ambuild.git
  - python2 -m pip $AMB ./ambuild
