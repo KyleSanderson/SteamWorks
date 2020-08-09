@@ -36,7 +36,7 @@ matrix:
         - RELEASE_PKG_FILE="package-mac.tgz"
  
 before_script:
- - (uname -a | grep Msys) && (pip install --upgrade setuptools) || echo ":-)"
+ - (uname -a | grep Msys) && (choco install -y pip && pip install --upgrade setuptools) || echo ":-)"
  - (uname -a | grep Msys) && (travis_wait 90 choco install -y vcbuildtools) || echo ":-)"
  - mkdir assets && cd assets
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b fix-deps https://github.com/alliedmodders/ambuild.git
