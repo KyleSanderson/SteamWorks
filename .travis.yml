@@ -57,7 +57,7 @@ script:
  - env
  - eval "$(exec /usr/bin/env -i "${SHELL}" -l -c "export")"
  - env
- - (uname -a | grep Msys) && powershell -ExecutionPolicy Bypass "(\"$VS140COMNTOOLS/../../VC/vcvarsall.bat\") -and ($SNAKEWRAP ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK)"
+ - (uname -a | grep Msys) && powershell "cmd /c "\"$VS140COMNTOOLS/../../VC/vcvarsall.bat\" && $SNAKEWRAP ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK""
  - (uname -a | grep -v Msys) && $SNAKEWRAP ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK
  - ambuild
  - tar czvf ${RELEASE_PKG_FILE} package
