@@ -26,8 +26,6 @@ matrix:
         - AMB="install"
         - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin:/c/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin"
         - RELEASE_PKG_FILE="package-win.tgz"
-        - CC="cl.exe"
-        - CXX="$CC"
     - os: mac
       osx_image: xcode7.2
       language: cpp
@@ -41,10 +39,7 @@ before_script:
  - (uname -a | grep Msys) && (travis_wait 90 choco install -y vcbuildtools) || echo ":-)"
  - mkdir assets && cd assets
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b fix-deps https://github.com/alliedmodders/ambuild.git
- - cd ambuild
- - python setup.py build
- - python setup.py $AMB
- - cd ..
+ - python2 -m pip $AMB ./ambuild
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.10-dev https://github.com/alliedmodders/metamod-source.git mmsource-central
