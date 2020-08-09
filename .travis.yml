@@ -27,7 +27,7 @@ matrix:
         - AMB="install"
         - PATH="$PATH:/C/python38:/C/python38/Scripts:/C/ProgramData/chocolatey/bin"
         - RELEASE_PKG_FILE="package-win.tgz"
-        - SNAKEWRAP="/C/python38/python.exe"
+        - SNAKEWRAP="C:/python38/python.exe"
     - os: mac
       osx_image: xcode7.2
       language: cpp
@@ -57,7 +57,7 @@ script:
  - env
  - eval "$(exec /usr/bin/env -i "${SHELL}" -l -c "export")"
  - env
- - powershell -ExecutionPolicy Bypass "(\"$VS140COMNTOOLS/vcvars32.bat\") -and ($SNAKEWRAP ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK)" || echo hi
+ - powershell -ExecutionPolicy Bypass "(\"$VS140COMNTOOLS/../../VC/vcvarsall.bat\") -and ($SNAKEWRAP ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK)" || echo hi
  - $SNAKEWRAP ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK || echo hi
  - ambuild
  - tar czvf ${RELEASE_PKG_FILE} package
