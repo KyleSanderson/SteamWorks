@@ -20,7 +20,6 @@ matrix:
         - AMB="install --user"
         - PATH="~/.local/bin:$PATH"
         - RELEASE_PKG_FILE="package-lin.tgz"
-        - PLATWRAP="sh -c"
         - SNAKEWRAP="python"
     - os: windows
       language: bash
@@ -28,7 +27,6 @@ matrix:
         - AMB="install"
         - PATH="$PATH:/C/python38:/C/python38/Scripts:/C/ProgramData/chocolatey/bin"
         - RELEASE_PKG_FILE="package-win.tgz"
-        - PLATWRAP="powershell -ExecutionPolicy Bypass" 
         - SNAKEWRAP="/C/python38/python.exe"
     - os: mac
       osx_image: xcode7.2
@@ -38,12 +36,11 @@ matrix:
         - AMB="install"
         - PATH="~/.local/bin:$PATH"
         - RELEASE_PKG_FILE="package-mac.tgz"
-        - PLATWRAP="sh -c"
         - SNAKEWRAP="python"
  
 before_script:
- - (uname -a | grep Msys) && (choco install -y pip && pip install --upgrade setuptools) || echo ":-)"
- - (uname -a | grep Msys) && (travis_wait 90 $PLATWRAP choco install -y vcbuildtools && $PLATWRAP refreshenv) || echo ":-)"
+ - (uname -a | grep Msys) && (choco install -y pip) || echo ":-)"
+ - (uname -a | grep Msys) && (travis_wait 90 choco install -y vcbuildtools) || echo ":-)"
  - mkdir assets && cd assets
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b fix-deps https://github.com/alliedmodders/ambuild.git
  - $SNAKEWRAP -m pip $AMB ./ambuild
@@ -57,7 +54,8 @@ script:
  - mkdir build
  - cd build
  - cp ../AMBuildScript ../../
- - $PLATWRAP $SNAKEWRAP ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK 
+ - eval "$(exec /usr/bin/env -i "${SHELL}" -l -c "export")"
+ - $SNAKEWRAP ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK 
  - ambuild
  - tar czvf ${RELEASE_PKG_FILE} package
 
