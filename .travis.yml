@@ -27,7 +27,7 @@ matrix:
         - AMB="install"
         - PATH="$PATH:/C/python38:/C/python38/Scripts:/C/ProgramData/chocolatey/bin"
         - RELEASE_PKG_FILE="package-win.tgz"
-        - PLATWRAP="powershell" 
+        - PLATWRAP="powershell -ExecutionPolicy Bypass" 
     - os: mac
       osx_image: xcode7.2
       language: cpp
