@@ -39,7 +39,7 @@ matrix:
         - PLATWRAP="sh -c"
  
 before_script:
- - (uname -a | grep Msys) && ($PLATWRAP choco install -y pip && pip install --upgrade setuptools) || echo ":-)"
+ - (uname -a | grep Msys) && ($PLATWRAP choco install -y pip && pip install --upgrade setuptools || ls -la /c/python38) || echo ":-)"
  - (uname -a | grep Msys) && (travis_wait 90 $PLATWRAP choco install -y vcbuildtools) || echo ":-)"
  - mkdir assets && cd assets
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b fix-deps https://github.com/alliedmodders/ambuild.git
