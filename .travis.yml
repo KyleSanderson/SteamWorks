@@ -21,7 +21,7 @@ matrix:
         - PATH="~/.local/bin:$PATH"
         - RELEASE_PKG_FILE="package-lin.tgz"
     - os: windows
-      language: python
+      language: bash
       env:
         - AMB="install"
         - PATH="$PATH:/C/ProgramData/chocolatey/bin:/C/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/opt/bin:/c/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin"
