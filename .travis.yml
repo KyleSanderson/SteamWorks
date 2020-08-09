@@ -37,10 +37,10 @@ matrix:
  
 before_script:
  - (uname -a | grep Msys) && (travis_wait 90 choco install -y vcbuildtools) || echo ":-)"
- - (uname -a | grep Msys) && (curl -O https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py) || echo ":-)"
+ - (uname -a | grep Msys) && (curl -O https://bootstrap.pypa.io/get-pip.py && python2 get-pip.py && python2 -m pip install --upgrade setuptools) || echo ":-)"
  - mkdir assets && cd assets
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b fix-deps https://github.com/alliedmodders/ambuild.git
- - python3 -m pip $AMB ./ambuild
+ - python2 -m pip $AMB ./ambuild
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
  - git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.10-dev https://github.com/alliedmodders/metamod-source.git mmsource-central
@@ -51,7 +51,7 @@ script:
  - mkdir build
  - cd build
  - cp ../AMBuildScript ../../
- - python3 ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK 
+ - python2 ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK 
  - ambuild
  - tar czvf ${RELEASE_PKG_FILE} package
 
