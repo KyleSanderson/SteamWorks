@@ -37,7 +37,7 @@ matrix:
  
 before_script:
  - mkdir assets && cd assets
- - git clone -b 2.1-distutils https://github.com/alliedmodders/ambuild.git
+ - git clone https://github.com/alliedmodders/ambuild.git
  - cd ambuild
  - python setup.py build
  - python setup.py $AMB
