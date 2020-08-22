@@ -44,7 +44,7 @@ jobs:
       with:
         repository: 'alliedmodders/hl2sdk'
         ref: 'sdk2013'
-        path: 'assets/sdk2013'
+        path: 'assets/hl2sdk-sdk2013'
     - uses: actions/checkout@v2
       name: Clone Metamod Source
       with:
