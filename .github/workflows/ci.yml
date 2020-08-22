@@ -2,9 +2,9 @@ name: SteamWorks.ext Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, windows98 ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, windows98 ]
 
 jobs:
   build:
