@@ -124,7 +124,7 @@ class SteamWorksConfig(object):
   def configure(self):
     builder.AddConfigureFile('pushbuild.txt')
 
-    cxx = builder.DetectCompilers()
+    cxx = builder.DetectCxx()
 
     if cxx.like('gcc'):
       cxx.defines += [
