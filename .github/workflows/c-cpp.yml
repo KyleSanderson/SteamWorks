@@ -11,13 +11,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [2.7, 3.3, 3.8]
+        python-version: [3.8]
         os: [ubuntu-18.04, macos-latest, windows-2019]
-        exclude:
-         - os: macos-latest
-           python-version: 3.3
-         - os: windows-2019
-           python-version: 3.3
 
     steps:
     - uses: actions/checkout@v2
@@ -31,22 +26,46 @@ jobs:
         sudo dpkg --add-architecture i386
         sudo apt-get install lib32stdc++-7-dev lib32z1-dev libc6-dev-i386
         sudo apt-get install g++-multilib
+    - uses: actions/checkout@v2
+      name: Clone AMBuild
+      with:
+        repository: 'alliedmodders/ambuild'
+        path: 'assets/ambuild'
     - name: install AMBuild
+      run: pip install ./assets/ambuild
+    - uses: actions/checkout@v2
+      name: Clone SteamworksSDK
+      with:
+        repository: 'SteamDatabase/SteamworksSDK'
+        path: 'assets/SteamworksSDK'
+        token: ${{ secrets.OAUTH }}
+    - uses: actions/checkout@v2
+      name: Clone hl2sdk-sdk2013
+      with:
+        repository: 'alliedmodders/hl2sdk'
+        ref: 'sdk2013'
+        path: 'assets/hl2sdk-sdk2013'
+    - uses: actions/checkout@v2
+      name: Clone Metamod Source
+      with:
+        repository: 'alliedmodders/metamod-source'
+        ref: '1.10-dev'
+        path: 'assets/mmsource-central'
+    - uses: actions/checkout@v2
+      name: Clone Sourcemod
+      with:
+        repository: 'alliedmodders/sourcemod'
+        ref: '1.7-dev'
+        path: 'assets/sourcemod-central'
+    - name: Create Build folder
+      run: mkdir build
+    - name: Create redundant AMBuildScript
+      run: cp AMBuildScript ../
+    - name: Configure
       run: |
-        mkdir assets
-        cd assets
-        git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b fix-deps https://github.com/alliedmodders/ambuild.git
-        pip install ./ambuild
-    - name: Clone Dependencies
-      run: |
-        git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
-        git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
-        git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.10-dev https://github.com/alliedmodders/metamod-source.git mmsource-central
-        git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.7-dev https://github.com/alliedmodders/sourcemod.git sourcemod-central
-    - name: Run Build
-      run: |
-        mkdir build
         cd build
-        cp ../AMBuildScript ../../
-        python ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSD
+        python ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK
+    - name: Build
+      run: |
+        cd build
         ambuild
