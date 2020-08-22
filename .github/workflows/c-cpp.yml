@@ -31,22 +31,32 @@ jobs:
         sudo dpkg --add-architecture i386
         sudo apt-get install lib32stdc++-7-dev lib32z1-dev libc6-dev-i386
         sudo apt-get install g++-multilib
-    - name: install AMBuild
+    
+    - name: Create Assets folder
       run: |
         mkdir assets
         cd assets
-        git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b fix-deps https://github.com/alliedmodders/ambuild.git
-        pip install ./ambuild
-    - name: Clone Dependencies
-      run: |
-        git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
-        git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
-        git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.10-dev https://github.com/alliedmodders/metamod-source.git mmsource-central
-        git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.7-dev https://github.com/alliedmodders/sourcemod.git sourcemod-central
-    - name: Run Build
+    - name: Clone AMBuild
+      run: git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b fix-deps https://github.com/alliedmodders/ambuild.git
+    - name: install AMBuild
+      run: pip install ./ambuild
+    - name: Clone SteamworksSDK
+      run: git clone --depth 1 --recurse-submodules -j8 --shallow-submodules https://$OAUTH@github.com/SteamDatabase/SteamworksSDK.git SteamworksSDK
+    - name: Clone HL2SDK2013
+      run: git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b sdk2013 https://github.com/alliedmodders/hl2sdk.git hl2sdk-sdk2013
+    - name: Clone MetaMod Source
+      run: git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.10-dev https://github.com/alliedmodders/metamod-source.git mmsource-central
+    - name: Clone SourceMod
+      run: git clone --depth 1 --recurse-submodules -j8 --shallow-submodules -b 1.7-dev https://github.com/alliedmodders/sourcemod.git sourcemod-central
+    - name: Back out of assets
+      run: cd ../
+    - name: Create Build folder
       run: |
         mkdir build
         cd build
-        cp ../AMBuildScript ../../
-        python ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSD
-        ambuild
+    - name: Create redundant AMBuildScript
+      run: cp ../AMBuildScript ../../
+    - name: Configure
+      run: python ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSD
+    - name: Build
+      run: ambuild
