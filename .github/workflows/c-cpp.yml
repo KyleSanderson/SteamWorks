@@ -37,7 +37,7 @@ jobs:
       name: Clone SteamworksSDK
       with:
         repository: 'SteamDatabase/SteamworksSDK'
-        path: 'assets/SteamWorksSDK'
+        path: 'assets/SteamworksSDK'
         token: ${{ secrets.OAUTH }}
     - uses: actions/checkout@v2
       name: Clone hl2sdk-sdk2013
@@ -64,7 +64,7 @@ jobs:
     - name: Configure
       run: |
         cd build
-        python ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSD
+        python ../configure.py -s sdk2013 --hl2sdk-root ../assets --sm-path ../assets/sourcemod-central --mms-path ../assets/mmsource-central --steamworks-path ../assets/SteamworksSDK
     - name: Build
       run: |
         cd build
