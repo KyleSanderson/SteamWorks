@@ -63,7 +63,7 @@ class SteamWorksConfig(object):
 
     for sdk_name in PossibleSDKs:
       sdk = PossibleSDKs[sdk_name]
-      if builder.target_platform in sdk.platform:
+      if cxx.target.platform in sdk.platform:
         if builder.options.hl2sdk_root:
           sdk_path = os.path.join(builder.options.hl2sdk_root, sdk.folder)
         else:
@@ -125,6 +125,7 @@ class SteamWorksConfig(object):
     builder.AddConfigureFile('pushbuild.txt')
 
     cxx = builder.DetectCxx()
+    builder.cxx = cxx
 
     if cxx.like('gcc'):
       cxx.defines += [
@@ -165,7 +166,7 @@ class SteamWorksConfig(object):
           cxx.cflags += ['-Wno-unused-result']
       if have_clang:
         cxx.cxxflags += ['-Wno-implicit-exception-spec-mismatch']
-        if (builder.target_platform == 'mac' and cxx.version >= '5.1') or cxx.version >= '3.4':
+        if (cxx.target.platform == 'mac' and cxx.version >= '5.1') or cxx.version >= '3.4':
           cxx.cxxflags += ['-Wno-deprecated-register']
         else:
           cxx.cxxflags += ['-Wno-deprecated']
@@ -241,13 +242,13 @@ class SteamWorksConfig(object):
       cxx.cflags += ['/Oy-']
 
     # Platform-specifics
-    if builder.target_platform == 'linux':
+    if cxx.target.platform == 'linux':
       cxx.defines += ['_LINUX', 'POSIX']
       if cxx.vendor == 'gcc':
         cxx.linkflags += ['-static-libgcc']
       elif cxx.vendor == 'clang':
         cxx.linkflags += ['-lgcc_eh']
-    elif builder.target_platform == 'mac':
+    elif cxx.target.platform == 'mac':
       cxx.defines += ['OSX', '_OSX', 'POSIX']
       cxx.cflags += ['-mmacosx-version-min=10.5']
       cxx.linkflags += [
@@ -257,7 +258,7 @@ class SteamWorksConfig(object):
         '-stdlib=libc++'
       ]
       cxx.cxxflags += ['-stdlib=libc++']
-    elif builder.target_platform == 'windows':
+    elif cxx.target.platform == 'windows':
       cxx.defines += ['WIN32', '_WINDOWS']
 	  
   def ConfigureForExtension(self, context, compiler):
