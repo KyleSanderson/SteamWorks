@@ -54,7 +54,7 @@ class SteamWorksConfig(object):
     if builder.options.target:
         builder.cxx = builder.DetectCxx(target_arch = builder.options.target)
     else:
-        builder.cxx = builder.DetectCxx()
+        builder.cxx = builder.DetectCxx(target_arch = 'x86')
 
   @property
   def tag(self):
