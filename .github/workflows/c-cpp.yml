@@ -38,6 +38,7 @@ jobs:
       with:
         repository: 'SteamDatabase/SteamworksSDK'
         path: 'assets/SteamWorksSDK'
+        token: ${{ secrets.OAUTH }}
     - uses: actions/checkout@v2
       name: Clone hl2sdk-sdk2013
       with:
