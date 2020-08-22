@@ -11,13 +11,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [2.7, 3.3, 3.8]
+        python-version: [3.8]
         os: [ubuntu-18.04, macos-latest, windows-2019]
-        exclude:
-         - os: macos-latest
-           python-version: 3.3
-         - os: windows-2019
-           python-version: 3.3
 
     steps:
     - uses: actions/checkout@v2
@@ -32,28 +27,33 @@ jobs:
         sudo apt-get install lib32stdc++-7-dev lib32z1-dev libc6-dev-i386
         sudo apt-get install g++-multilib
     - uses: actions/checkout@v2
+      name: Clone AMBuild
       with:
-        repository: 'https://github.com/alliedmodders/ambuild.git'
-        path: 'assets'
+        repository: 'alliedmodders/ambuild'
+        path: 'assets/ambuild'
     - name: install AMBuild
       run: pip install ./assets/ambuild
     - uses: actions/checkout@v2
+      name: Clone SteamworksSDK
       with:
-        repository: 'https://github.com/SteamDatabase/SteamworksSDK.git'
+        repository: 'SteamDatabase/SteamworksSDK'
         path: 'assets/SteamWorksSDK'
     - uses: actions/checkout@v2
+      name: Clone hl2sdk-sdk2013
       with:
-        repository: 'https://github.com/alliedmodders/hl2sdk.git'
+        repository: 'alliedmodders/hl2sdk'
         ref: 'sdk2013'
         path: 'assets/sdk2013'
     - uses: actions/checkout@v2
+      name: Clone Metamod Source
       with:
-        repository: 'https://github.com/alliedmodders/metamod-source.git'
+        repository: 'alliedmodders/metamod-source'
         ref: '1.10-dev'
         path: 'assets/mmsource-central'
     - uses: actions/checkout@v2
+      name: Clone Sourcemod
       with:
-        repository: 'https://github.com/alliedmodders/sourcemod.git'
+        repository: 'alliedmodders/sourcemod'
         ref: '1.7-dev'
         path: 'assets/sourcemod-central'
     - name: Create Build folder
