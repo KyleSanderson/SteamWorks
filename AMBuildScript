@@ -256,7 +256,7 @@ class SteamWorksConfig(object):
         '-static',
         '-stdlib=libc++'
       ]
-      cxx.cxxflags += ['-stdlib=libstdc++']
+      cxx.cxxflags += ['-stdlib=libc++']
     elif builder.target_platform == 'windows':
       cxx.defines += ['WIN32', '_WINDOWS']
 	  
