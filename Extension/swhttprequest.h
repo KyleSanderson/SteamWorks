@@ -33,14 +33,14 @@ class SteamWorksHTTPRequest
 
 	public:
 		void OnHTTPRequestCompleted(HTTPRequestCompleted_t *pRequest, bool bFailed);
-		void OnHTTPHeadersReceived(HTTPRequestHeadersReceived_t *pRequest, bool bFailed);
-		void OnHTTPDataReceived(HTTPRequestDataReceived_t *pRequest, bool bFailed);
 
 	public:
 		CCallResult<SteamWorksHTTPRequest, HTTPRequestCompleted_t> CompletedCallResult;
-		CCallResult<SteamWorksHTTPRequest, HTTPRequestHeadersReceived_t> HeadersCallResult;
-		CCallResult<SteamWorksHTTPRequest, HTTPRequestDataReceived_t> DataCallResult;
-
+	
+	public:
+		STEAM_GAMESERVER_CALLBACK_MANUAL(SteamWorksHTTPRequest, OnHTTPHeadersReceived, HTTPRequestHeadersReceived_t, m_CallbackHTTPRequestHeadersReceived);
+		STEAM_GAMESERVER_CALLBACK_MANUAL(SteamWorksHTTPRequest, OnHTTPDataReceived, HTTPRequestDataReceived_t, m_CallbackHTTPRequestDataReceived);
+	
 	public:
 		IChangeableForward *pCompletedForward;
 		IChangeableForward *pHeadersReceivedForward;
